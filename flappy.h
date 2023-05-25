@@ -32,5 +32,5 @@ class flappyBird{
     public:
     	flappyBird();//建構元
         void run();//執行遊戲的函數，真正使用的main呼叫
-        
+        void setSFML();//設定初始SFML套件之物件
 };
