@@ -82,7 +82,8 @@ void inputName(){//如果輸入名稱有誤 要重新輸入到對為止
         }*/
 }
 void inGame(){
-	
+	//生成水管之方法{ pipes.push_back(); }
+		
 	/*for(auto &p : pipes){//顯示水管的方法
 		window.draw(p); 
 	}
