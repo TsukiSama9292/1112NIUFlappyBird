@@ -14,7 +14,8 @@ class flappyBird{
     Font font;    //宣告字體
     vector<Text>rank;    //宣告文字vector
     Sprite background,bird;    //宣告圖片精靈
-    vector<Sprite>pipes;
+    vector<Sprite>pipes; //宣告水管的vectof
+    //vector<Sprite>other; //宣告與水管無關的精靈vector，用於快速輸出至畫面
     Event event;
     bool inputname;
     int gameframe;  //遊戲時的幀，可用在小鳥動態and水管移動 ex:
