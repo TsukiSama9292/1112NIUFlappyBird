@@ -32,7 +32,19 @@ using namespace std;
 
 
 flappyBird::flappyBird() { //建構元 初始化資料
-	setSFML();
+	state = homepage;
+	setSFML();//初始化SFML套件的物件
+}
+void flappyBird::setSFML(){
+	RenderWindow window(VideoMode(1000, 600),"111_2NIUFlappy Bird"); //宣告window物件寬1000，高600
+    window.setKeyRepeatEnabled(false); //禁止按住按鍵的連續觸發
+    window.setPosition(Vector2i(0, 0));     //設定窗口的左上座標為(0,0)
+    window.setFramerateLimit(60);           //設定最大幀數60
+    font.loadFromFile("./AllSundries/font/flappybird.ttf");    //載入字體
+    bg.loadFromFile("./AllSundries/image/background.png"); //載入背景圖片
+    bd.loadFromFile("./AllSundries/image/bird.png");
+    pi.loadFromFile("./AllSundries/image/pipe.png");
+    background.setTexture(bg);
 }
 
 void flappyBird::draw(vector<Sprite> allshow){
@@ -51,18 +63,9 @@ void flappyBird::show(State state){
         //allshow.push_back(/*bottom1~3*/);//顯示三個按鈕
     }
     else if(state==game){
-        //input name function
-        /*if(name[0]==" "){
-            //重新輸入name
-        }*/
-        //Call inGame();
-        /*for(auto &p : pipes){
-            window.draw(p);
-        }
-        window.draw(bird);
-        if( gameover ){
-            window.draw( text_gameover );
-        }*/
+		//inputName();
+		//inGame();
+        
     }
     else if(state==level){
         //show the 1st~10 name & score
@@ -72,18 +75,21 @@ void flappyBird::show(State state){
     }
     allshow.clear();
 }
-void flappyBird::setSFML(){
-	RenderWindow window(VideoMode(1000, 600),"111_2NIUFlappy Bird"); //宣告window物件寬1000，高600
-    //window.setKeyRepeatEnabled(false); //禁止按住按鍵的連續觸發
-    window.setPosition(Vector2i(0, 0));     //設定窗口的左上座標為(0,0)
-    window.setFramerateLimit(60);           //設定最大幀數60
-    font.loadFromFile("./AllSundries/font/flappybird.ttf");    //載入字體
-    bg.loadFromFile("./AllSundries/image/background.png"); //載入背景圖片
-    bd.loadFromFile("./AllSundries/image/bird.png");
-    pi.loadFromFile("./AllSundries/image/pipe.png");
-    state = homepage;
-    background.setTexture(bg);
-    released = true;
+void inputName(){//如果輸入名稱有誤 要重新輸入到對為止
+	//input name function
+        /*if(name[0]==" "){
+            //重新輸入name
+        }*/
+}
+void inGame(){
+	
+	/*for(auto &p : pipes){//顯示水管的方法
+		window.draw(p); 
+	}
+	window.draw(bird);
+	if( gameover ){
+		window.draw( text_gameover );
+	}*/
 }
 void flappyBird::run(){
 	RenderWindow window(VideoMode(1000, 600),"111_2NIUFlappy Bird");
@@ -97,7 +103,7 @@ void flappyBird::run(){
 				window.close();
 		}
     	window.clear();
-		window.draw(background);
+		draw(allshow);//顯示當前下的精靈
 		window.display();
 	}
 	
