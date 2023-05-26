@@ -1,1 +1,16 @@
+目前已知範例的程式因為Dev c++ GCC的版本低於5.0
+所以無法執行std::shared_ptr和std::make_shared
+故無法使用其快速製作節省記憶體與CPU運算的物件指標方法
+我們目前可以使用一般物件寫法進行coding...
 
+在main裡面事先寫了一個名為flappy的物件用於整個遊戲執行
+flappy.run()之後則是遊戲主體開始
+class內會跑flappyBird的建構元 初始化資料與stats(homepage)
+//switch狀態可能要放到別處才對
+
+rank這個詞彙在sf::也有 導致關鍵字重複
+
+建構元禁止放入SFML相關的函式
+目前改放在setSFML()中
+
+所有要跑的電腦編譯器都需要額外用-std=c++11
