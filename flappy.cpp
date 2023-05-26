@@ -45,6 +45,8 @@ void flappyBird::setSFML(){
     bd.loadFromFile("./AllSundries/image/bird.png");
     pi.loadFromFile("./AllSundries/image/pipe.png");
     background.setTexture(bg);
+	bird.setTexture(bd);
+	pipe->setTexture(pi);
 }
 
 void flappyBird::draw(vector<Sprite> allshow){
@@ -59,13 +61,13 @@ void flappyBird::draw(vector<Sprite> allshow){
 void flappyBird::show(State state){
     vector<Sprite> allshow;//利用vector 加入需要顯示的精靈
     if(state==homepage){
-        //allshow.push_back(bird);//我們可能可以加入一隻鳥在中間上下飛
+        //allshow.push_back(bird);//我們可能可以加入一隻鳥在中間上下飛or靜止
+		//showText("Flappy Bird");//顯示Flappy Bird在 畫面正上方
         //allshow.push_back(/*bottom1~3*/);//顯示三個按鈕
     }
     else if(state==game){
 		//inputName();
 		//inGame();
-        
     }
     else if(state==level){
         //show the 1st~10 name & score
@@ -82,8 +84,8 @@ void inputName(){//如果輸入名稱有誤 要重新輸入到對為止
         }*/
 }
 void inGame(){
-	//生成水管之方法{ pipes.push_back(); }
-		
+	//生成水管之方法{ pipes.push_back(*pipe); }
+	//
 	/*for(auto &p : pipes){//顯示水管的方法
 		window.draw(p); 
 	}
