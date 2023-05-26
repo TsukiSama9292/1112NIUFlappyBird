@@ -6,18 +6,20 @@ using namespace std;
 enum State{homepage,game,level,introduction}state; //宣告模式(0為首頁 1為遊戲 2為排行 3為介紹)
 class flappyBird{
     RenderWindow window;    //宣告視窗
-    bool released,visible,gameover;    //宣告可見性 遊戲結束
-    int x,y,score;    //宣告分數
-    Text text_score,text_gameover;
-    float gravity;    //宣告重力
+    bool gameover,addscore;
+    int score;
+    Text text_score,text_gameover;  //分數、遊戲結束之文字
+    float gravity,frame; 
     Texture bg, bd, pi;    //宣告圖片
     Font font;    //宣告字體
-    vector<Text>rank;    //宣告文字vector
-    Sprite background,bird,*pipe;    //宣告圖片精靈
+    vector<Text>text;    //宣告文字vector
+    Sprite *background=new Sprite();    //宣告圖片精靈
+    Sprite *bird=new Sprite();  
+    Sprite *pipeBottom=new Sprite();    
+    Sprite *pipeTop=new Sprite();
     vector<Sprite>pipes; //宣告水管的vectof
     //vector<Sprite>other; //宣告與水管無關的精靈vector，用於快速輸出至畫面
     Event event;
-    bool inputname;
     int gameframe;  //遊戲時的幀，可用在小鳥動態and水管移動 ex:
 
     //沒有要用物件但受類別保護的函數放在protected，要用物件且受物件保護放在private，外部呼叫的放在public
