@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 #include "set_rank.h"
 using namespace std;
+//二進位轉字元
     string setrank::binary_to_string(string s)
     {
         int n=0;
@@ -12,6 +13,7 @@ using namespace std;
         feedback+=(char)n;
         return feedback;
     }
+//二進位轉數字
     long long setrank::binary_to_longlong(string s)
     {
         long long n=0;
@@ -21,6 +23,7 @@ using namespace std;
         }
         return n;
     }
+//字串轉二進位
     string setrank::string_to_binary(string s)
     {
         string feedback="";
@@ -38,6 +41,7 @@ using namespace std;
         }
         return feedback;
     }
+//數字轉二進位
     string setrank::longlong_to_binary(long long n)
     {
         if(n==0) return "0";
@@ -50,6 +54,7 @@ using namespace std;
         reverse(feedback.begin(),feedback.end());
         return feedback;
     }
+//建構元
     setrank::setrank()
     {
         //read
@@ -84,6 +89,7 @@ using namespace std;
         ifs.close();
         v=feedback;
     }
+//更新資料
     pair<int,long long> setrank::renewrank(pair<string,long long> p)
     {
         int idx=-1;
