@@ -2,8 +2,9 @@
 #include "flappy.cpp"
 using namespace std;
 int main(){
-    srand(time(NULL));
-    flappyBird *flappy = new flappyBird();
-    flappy->run();
-    return 0;
+  srand(time(NULL));
+  auto *flappybird = new FlappyBird();
+  flappybird->run();
+  return 0;
 }
+
