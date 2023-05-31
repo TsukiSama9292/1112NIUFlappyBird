@@ -81,10 +81,10 @@ void FlappyBird::events(){ //用於關閉視窗，重新開始遊戲
 void FlappyBird::draw(){ //刷新畫面，渲染並顯示圖示 
 	window->clear(); //清除整個畫面，用於刷新畫面，達到動畫效果 
 	window->draw(*background); //待執行顯示背景 
-	window->draw(*bird); //待執行顯示鳥 
 	for(auto &p:pipes){ //遍歷所有管道 
 		window->draw(p); //待執行顯示管道 
 	}
+	window->draw(*bird); //待執行顯示鳥
 	if(gameover) //如果遊戲結束 
 		window->draw(text_gameover); //待執行顯示遊戲結束 
 	window->draw(text_score); //待執行顯示分數 
