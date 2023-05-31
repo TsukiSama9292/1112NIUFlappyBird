@@ -3,164 +3,164 @@
 
 using namespace std;
 using namespace sf;
-FlappyBird::FlappyBird(){ //«Øºc¤¸(¤l)¡A³]©wªì©l­È 
-  setSFML(); //¥Ñ©óSFML®M¥óªºª«¥ó³]©w¤£¥i¦b«Øºc¤l°õ¦æ¡A©Ò¥H¥t¥~©I¥s¨ç¼Æ 
+FlappyBird::FlappyBird(){ //å»ºæ§‹å…ƒ(å­)ï¼Œè¨­å®šåˆå§‹å€¼ 
+  setSFML(); //ç”±æ–¼SFMLå¥—ä»¶çš„ç‰©ä»¶è¨­å®šä¸å¯åœ¨å»ºæ§‹å­åŸ·è¡Œï¼Œæ‰€ä»¥å¦å¤–å‘¼å«å‡½æ•¸ 
 }
-void FlappyBird::setSFML(){ //¥Î©ó³]©wªì©l­È 
-	//°Ñ¼Æ³]©w 
-	g =  frame = 0.f; //³]©wªì©l­«¶q¡B´V(¥Î©ó³]©w³¾ªº¹Ï¥Ü»P¶É¨¤) 
-	interval = 240.f; //³]©wºŞ¹D°Ï¶¡ 
-	count = 0; //±`¼Æ-¥Î©ó¥Í¦¨ºŞ¹D 
-	gameover = addscore = false;  //µ²§ô¡B¥[¤À¬°§_ 
-	score = 0;  //¤À¼Æ¬°0 
+void FlappyBird::setSFML(){ //ç”¨æ–¼è¨­å®šåˆå§‹å€¼ 
+	//åƒæ•¸è¨­å®š 
+	g =  frame = 0.f; //è¨­å®šåˆå§‹é‡é‡ã€å¹€(ç”¨æ–¼è¨­å®šé³¥çš„åœ–ç¤ºèˆ‡å‚¾è§’) 
+	interval = 240.f; //è¨­å®šç®¡é“å€é–“ 
+	count = 0; //å¸¸æ•¸-ç”¨æ–¼ç”Ÿæˆç®¡é“ 
+	gameover = addscore = false;  //çµæŸã€åŠ åˆ†ç‚ºå¦ 
+	score = 0;  //åˆ†æ•¸ç‚º0 
 	
-	//µøµ¡³]©w 
-	window = new RenderWindow(VideoMode(1000, 600),"111_2NIUFlappy Bird"); //µøµ¡³]©w 
-	window->setPosition(Vector2i(0, 0)); //ªì©l¤Æµøµ¡®y¼Ğ¥ª¤W¨¤(0,0) 
+	//è¦–çª—è¨­å®š 
+	window = new RenderWindow(VideoMode(1000, 600),"111_2NIUFlappy Bird"); //è¦–çª—è¨­å®š 
+	window->setPosition(Vector2i(0, 0)); //åˆå§‹åŒ–è¦–çª—åº§æ¨™å·¦ä¸Šè§’(0,0) 
 	
-	//½Õ±±¹CÀ¸³t«× 
-	window->setFramerateLimit( 60 ); //­­¨î³Ì¤j´V¼Æ¡A¥Ñ©ó¥¦¦b¤º³¡¨Ï¥Î sf::sleep¡A¨äºë«×¨ú¨M©ó©³¼h¾Ş§@¨t²Î¡Aµ²ªG¤]¥i¯à¦³ÂI¤£ºë½T¡A
-	//window->setFramerateLimit( 0 ); //µL´V¼Æ­­¨î¡A¹CÀ¸¥H³Ì§Öªº³t«×¶i¦æ 
+	//èª¿æ§éŠæˆ²é€Ÿåº¦ 
+	window->setFramerateLimit( 60 ); //é™åˆ¶æœ€å¤§å¹€æ•¸ï¼Œç”±æ–¼å®ƒåœ¨å…§éƒ¨ä½¿ç”¨ sf::sleepï¼Œå…¶ç²¾åº¦å–æ±ºæ–¼åº•å±¤æ“ä½œç³»çµ±ï¼Œçµæœä¹Ÿå¯èƒ½æœ‰é»ä¸ç²¾ç¢ºï¼Œ
+	//window->setFramerateLimit( 0 ); //ç„¡å¹€æ•¸é™åˆ¶ï¼ŒéŠæˆ²ä»¥æœ€å¿«çš„é€Ÿåº¦é€²è¡Œ 
 	
-	/*¥H¤U¬O­I´ºªº¹Ï»PºëÆF³]©w*/
-	bg.loadFromFile("./resources/img/background.png"); //¸ü¤J¹Ï¤ù  
-	background = new Sprite(); //«Ø¥ßºëÆF
-	background->setTexture(bg); //ºëÆF¹Ï®×³]¬°­I´º¹Ï
-	//µL¶·³]©w¦ì¸m»P¤j¤p ªì©l¦ì¸m¬°(0,0) µøµ¡»P¹Ïµ¥¤j 
+	/*ä»¥ä¸‹æ˜¯èƒŒæ™¯çš„åœ–èˆ‡ç²¾éˆè¨­å®š*/
+	bg.loadFromFile("./resources/img/background.png"); //è¼‰å…¥åœ–ç‰‡  
+	background = new Sprite(); //å»ºç«‹ç²¾éˆ
+	background->setTexture(bg); //ç²¾éˆåœ–æ¡ˆè¨­ç‚ºèƒŒæ™¯åœ–
+	//ç„¡é ˆè¨­å®šä½ç½®èˆ‡å¤§å° åˆå§‹ä½ç½®ç‚º(0,0) è¦–çª—èˆ‡åœ–ç­‰å¤§ 
 	
-	/*¥H¤U¬O³¾ªº¹Ï»PºëÆF³]©w*/
-	bd.loadFromFile("./resources/img/flappy.png"); //¸ü¤J¹Ï¤ù  
-	bird = new Sprite(); //«Ø¥ßºëÆF 
-	bird->setTexture(bd);  //ºëÆF¹Ï®×³]¬°³¾ 
-	bird->setPosition(500.f - bd.getSize().x / 2.f , 300.f-bd.getSize().y / 2.f); //³]©w³¾ªºªì©l¦ì¸m 
-	bird->setScale(2.f, 2.f); //½Õ¾ã¤j¤p(¤ñ¨Ò)
-	bird->setTextureRect(IntRect(0, 0, 34, 24)); //¨ú¥Î¹Ï¤ù¤¤¡A³Ì¥ª°¼ªº³¾ 
+	/*ä»¥ä¸‹æ˜¯é³¥çš„åœ–èˆ‡ç²¾éˆè¨­å®š*/
+	bd.loadFromFile("./resources/img/flappy.png"); //è¼‰å…¥åœ–ç‰‡  
+	bird = new Sprite(); //å»ºç«‹ç²¾éˆ 
+	bird->setTexture(bd);  //ç²¾éˆåœ–æ¡ˆè¨­ç‚ºé³¥ 
+	bird->setPosition(500.f - bd.getSize().x / 2.f , 300.f-bd.getSize().y / 2.f); //è¨­å®šé³¥çš„åˆå§‹ä½ç½® 
+	bird->setScale(2.f, 2.f); //èª¿æ•´å¤§å°(æ¯”ä¾‹)
+	bird->setTextureRect(IntRect(0, 0, 34, 24)); //å–ç”¨åœ–ç‰‡ä¸­ï¼Œæœ€å·¦å´çš„é³¥ï¼Œå‰å…©å€‹å€¼ç‚ºåœ–ç‰‡çš„åº§æ¨™ï¼Œå¾Œå…©å€¼ç‚ºå–æ¨£å¤§å°(å¯¬ã€é«˜) 
 	
-	/*¥H¤U¬OºŞ¹Dªº¹Ï»PºëÆF³]©w*/
-	pipe.loadFromFile("./resources/img/pipe.png"); //¸ü¤J¹Ï¤ù
-	pipeBottom = new Sprite(); //«Ø¥ßºëÆF 
-	pipeTop = new Sprite(); //«Ø¥ßºëÆF 
-	pipeBottom->setTexture(pipe); //ºëÆF¹Ï®×³]¬°ºŞ¹D 
-	pipeTop->setTexture(pipe); //ºëÆF¹Ï®×³]¬°ºŞ¹D 
-	pipeBottom->setScale(1.5f, 1.5f); //½Õ¾ã¤j¤p(¤ñ¨Ò)
-	pipeTop->setScale(1.5f, -1.5f); //½Õ¾ã¤j¤p(¤ñ¨Ò)¡A­t¼Æ¬°ÄA­Ë 
+	/*ä»¥ä¸‹æ˜¯ç®¡é“çš„åœ–èˆ‡ç²¾éˆè¨­å®š*/
+	pipe.loadFromFile("./resources/img/pipe.png"); //è¼‰å…¥åœ–ç‰‡
+	pipeBottom = new Sprite(); //å»ºç«‹ç²¾éˆ 
+	pipeTop = new Sprite(); //å»ºç«‹ç²¾éˆ 
+	pipeBottom->setTexture(pipe); //ç²¾éˆåœ–æ¡ˆè¨­ç‚ºç®¡é“ 
+	pipeTop->setTexture(pipe); //ç²¾éˆåœ–æ¡ˆè¨­ç‚ºç®¡é“ 
+	pipeBottom->setScale(1.5f, 1.5f); //èª¿æ•´å¤§å°(æ¯”ä¾‹)
+	pipeTop->setScale(1.5f, -1.5f); //èª¿æ•´å¤§å°(æ¯”ä¾‹)ï¼Œè² æ•¸ç‚ºé¡›å€’ 
 	
-	/*¥H¤U¬O¹CÀ¸µ²§ôªº¦rÅé»P¤å¦r³]©w*/
-	font.loadFromFile("./resources/font/flappybird.ttf"); //¸ü¤J¦r«¬ 
-	text_gameover.setFont(font); //®M¥Î¦r«¬ 
-	text_gameover.setString("Press SPACE to restart"); //¤å¦r¤º®e³]©w 
-	text_gameover.setPosition(200, 300); //¦ì¸m³]©w 
-	text_gameover.setCharacterSize(50); //¦rÅé¤j¤p³]©w 
-	text_gameover.setOutlineThickness(3); //¦rÅé²Ê²Ó³]©w 
+	/*ä»¥ä¸‹æ˜¯éŠæˆ²çµæŸçš„å­—é«”èˆ‡æ–‡å­—è¨­å®š*/
+	font.loadFromFile("./resources/font/flappybird.ttf"); //è¼‰å…¥å­—å‹ 
+	text_gameover.setFont(font); //å¥—ç”¨å­—å‹ 
+	text_gameover.setString("Press SPACE to restart"); //æ–‡å­—å…§å®¹è¨­å®š 
+	text_gameover.setPosition(200, 300); //ä½ç½®è¨­å®š 
+	text_gameover.setCharacterSize(50); //å­—é«”å¤§å°è¨­å®š 
+	text_gameover.setOutlineThickness(3); //å­—é«”ç²—ç´°è¨­å®š 
 	
-	/*¥H¤U¬O¤À¼Æªº¦rÅé»P¤å¦r³]©w*/
-	text_score.setFont(font); //®M¥Î¦r«¬ 
-	text_score.setString(std::to_string(score)); //¤å¦r¤º®e³]©w  
-	text_score.setPosition(10.f, 10.f); //¦ì¸m³]©w
-	text_score.setCharacterSize(50); //¦rÅé¤j¤p³]©w
-	text_score.setOutlineThickness(3); //¦rÅé²Ê²Ó³]©w
+	/*ä»¥ä¸‹æ˜¯åˆ†æ•¸çš„å­—é«”èˆ‡æ–‡å­—è¨­å®š*/
+	text_score.setFont(font); //å¥—ç”¨å­—å‹ 
+	text_score.setString(std::to_string(score)); //æ–‡å­—å…§å®¹è¨­å®š  
+	text_score.setPosition(10.f, 10.f); //ä½ç½®è¨­å®š
+	text_score.setCharacterSize(50); //å­—é«”å¤§å°è¨­å®š
+	text_score.setOutlineThickness(3); //å­—é«”ç²—ç´°è¨­å®š
 }
 
-void FlappyBird::events(){ //¥Î©óÃö³¬µøµ¡¡A­«·s¶}©l¹CÀ¸ 
-	auto e = new Event(); //µøµ¡¨Æ¥óª«¥ó³]©w 
-	while( window->pollEvent( *e ) ){ //¨Æ¥óµo¥Í®É°õ¦æ 
-		if( e->type == Event::Closed){ //¨Æ¥ó­Y¬°ÂIÀ»Ãö³¬µøµ¡ 
-			window->close(); //µøµ¡ª«¥óÃö³¬¡A§Y¹CÀ¸Ãö³¬ 
+void FlappyBird::events(){ //ç”¨æ–¼é—œé–‰è¦–çª—ï¼Œé‡æ–°é–‹å§‹éŠæˆ² 
+	auto e = new Event(); //è¦–çª—äº‹ä»¶ç‰©ä»¶è¨­å®š 
+	while( window->pollEvent( *e ) ){ //äº‹ä»¶ç™¼ç”Ÿæ™‚åŸ·è¡Œ 
+		if( e->type == Event::Closed){ //äº‹ä»¶è‹¥ç‚ºé»æ“Šé—œé–‰è¦–çª— 
+			window->close(); //è¦–çª—ç‰©ä»¶é—œé–‰ï¼Œå³éŠæˆ²é—œé–‰ 
 		}
 	}
-	if(gameover && Keyboard::isKeyPressed(Keyboard::Space)){//¹CÀ¸µ²§ô®É«ö¤UªÅ¥ÕÁä¡A§Y¥i­«·s¶}©l 
-		score = 0; //ªì©l¤Æ¤À¼Æ 
-		g =  frame = 0.f; //ªì©l¤Æ­«¶q¡B´V(¥Î©ó³]©w³¾ªº¹Ï¥Ü»P¶É¨¤)
-		text_score.setString(to_string(score)); //ªì©l¤Æ¤À¼Æ¤å¦r¤º®e 
-		pipes.clear(); //ºŞ¹D¥ş³¡²M°£
-		bird->setPosition(500.f - bd.getSize().x / 2.f , 300.f-bd.getSize().y / 2.f); //ªì©l¤Æ³¾ªº®y¼Ğ 
-		gameover = false; //³]µ²§ôµ²§ô¬°§_ 
+	if(gameover && Keyboard::isKeyPressed(Keyboard::Space)){//éŠæˆ²çµæŸæ™‚æŒ‰ä¸‹ç©ºç™½éµï¼Œå³å¯é‡æ–°é–‹å§‹ 
+		score = 0; //åˆå§‹åŒ–åˆ†æ•¸ 
+		g =  frame = 0.f; //åˆå§‹åŒ–é‡é‡ã€å¹€(ç”¨æ–¼è¨­å®šé³¥çš„åœ–ç¤ºèˆ‡å‚¾è§’)
+		text_score.setString(to_string(score)); //åˆå§‹åŒ–åˆ†æ•¸æ–‡å­—å…§å®¹ 
+		pipes.clear(); //ç®¡é“å…¨éƒ¨æ¸…é™¤
+		bird->setPosition(500.f - bd.getSize().x / 2.f , 300.f-bd.getSize().y / 2.f); //åˆå§‹åŒ–é³¥çš„åº§æ¨™ 
+		gameover = false; //è¨­çµæŸçµæŸç‚ºå¦ 
 	}
 }
 
-void FlappyBird::draw(){ //¨ê·sµe­±¡A´è¬V¨ÃÅã¥Ü¹Ï¥Ü 
-	window->clear(); //²M°£¾ã­Óµe­±¡A¥Î©ó¨ê·sµe­±¡A¹F¨ì°Êµe®ÄªG 
-	window->draw(*background); //«İ°õ¦æÅã¥Ü­I´º 
-	window->draw(*bird); //«İ°õ¦æÅã¥Ü³¾ 
-	for(auto &p:pipes){ //¹M¾ú©Ò¦³ºŞ¹D 
-		window->draw(p); //«İ°õ¦æÅã¥ÜºŞ¹D 
+void FlappyBird::draw(){ //åˆ·æ–°ç•«é¢ï¼Œæ¸²æŸ“ä¸¦é¡¯ç¤ºåœ–ç¤º 
+	window->clear(); //æ¸…é™¤æ•´å€‹ç•«é¢ï¼Œç”¨æ–¼åˆ·æ–°ç•«é¢ï¼Œé”åˆ°å‹•ç•«æ•ˆæœ 
+	window->draw(*background); //å¾…åŸ·è¡Œé¡¯ç¤ºèƒŒæ™¯ 
+	window->draw(*bird); //å¾…åŸ·è¡Œé¡¯ç¤ºé³¥ 
+	for(auto &p:pipes){ //éæ­·æ‰€æœ‰ç®¡é“ 
+		window->draw(p); //å¾…åŸ·è¡Œé¡¯ç¤ºç®¡é“ 
 	}
-	if(gameover) //¦pªG¹CÀ¸µ²§ô 
-		window->draw(text_gameover); //«İ°õ¦æÅã¥Ü¹CÀ¸µ²§ô 
-	window->draw(text_score); //«İ°õ¦æÅã¥Ü¤À¼Æ 
-	window->display(); //©I¥sOpenGL´è¬V§¹¦¨«á½Õ¥Î(¹ï·í«e´Vªº©Ò¦³«İÅã¥Ü¹Ï¹³Åã¥Ü¦bµe­±¤W) 
+	if(gameover) //å¦‚æœéŠæˆ²çµæŸ 
+		window->draw(text_gameover); //å¾…åŸ·è¡Œé¡¯ç¤ºéŠæˆ²çµæŸ 
+	window->draw(text_score); //å¾…åŸ·è¡Œé¡¯ç¤ºåˆ†æ•¸ 
+	window->display(); //å‘¼å«OpenGLæ¸²æŸ“å®Œæˆå¾Œèª¿ç”¨(å°ç•¶å‰å¹€çš„æ‰€æœ‰å¾…é¡¯ç¤ºåœ–åƒé¡¯ç¤ºåœ¨ç•«é¢ä¸Š) 
 }
 
-void FlappyBird::pipeMove(){ //¥Î©ó²¾°Ê¤ôºŞ¡A»P³¾ªº¸õÅD 
+void FlappyBird::pipeMove(){ //ç”¨æ–¼ç§»å‹•æ°´ç®¡ï¼Œèˆ‡é³¥çš„è·³èº 
 
-	if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25){ //°ª«×25¸T¤î©¹¤W 
-		g = -8.f; //³]©w­«¶q¦V¤U 
-		bird->setRotation(-frame - 10.f); //±ÛÂàµy·L¦V¤W¬İ 
+	if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25){ //é«˜åº¦25ç¦æ­¢å¾€ä¸Š 
+		g = -8.f; //è¨­å®šé‡é‡å‘ä¸‹ 
+		bird->setRotation(-frame - 10.f); //æ—‹è½‰ç¨å¾®å‘ä¸Šçœ‹ 
 	}
 	else
-		bird->setRotation(frame - 10.f); //±ÛÂàµy·L¦V¤U¬İ
-	if( count % 150 == 0 ){ //¨C°õ¦æ150¦¸®É 
-		int pos = rand() % 335 + 25; //³]©wÀH¾÷°ª«× 
-		pipeTop->setPosition(1000, pos);  //¤WºŞ¹D³]©w¦ì¸m
-		pipeBottom->setPosition(1000, pos + interval); //¤UºŞ¹D³]©w¦ì¸m 
-		pipes.push_back(*pipeTop); //ºŞ¹Dvector·s¼W¤WºŞ¹D 
-		pipes.push_back(*pipeBottom); //ºŞ¹Dvector·s¼W¤UºŞ¹D  
+		bird->setRotation(frame - 10.f); //æ—‹è½‰ç¨å¾®å‘ä¸‹çœ‹
+	if( count % 150 == 0 ){ //æ¯åŸ·è¡Œ150æ¬¡æ™‚ 
+		int pos = rand() % 335 + 25; //è¨­å®šéš¨æ©Ÿé«˜åº¦ 
+		pipeTop->setPosition(1000, pos);  //ä¸Šç®¡é“è¨­å®šä½ç½®
+		pipeBottom->setPosition(1000, pos + interval); //ä¸‹ç®¡é“è¨­å®šä½ç½® 
+		pipes.push_back(*pipeTop); //ç®¡é“vectoræ–°å¢ä¸Šç®¡é“ 
+		pipes.push_back(*pipeBottom); //ç®¡é“vectoræ–°å¢ä¸‹ç®¡é“  
 	}
-	for (size_t i {}; i < pipes.size(); i++) { //§Q¥Îsize_t ¹M¾úª«¥ó  
-		if(pipes[i].getGlobalBounds().intersects(bird->getGlobalBounds())){ //¥Í¦¨ºŞ¹D¡B»P³¾ªº¯x§Î¡A¦pªG¨â¯x§Î¥æÅ|¡A°õ¦æ 
-			/*/¦]¬°¥Í¦¨¯x§Î·|ÅıºŞ¹D¡B³¾¹Ï¤ù¥H¥¼±ÛÂàªº¡A¦ıÁY©ñ¹Lªº¯x§Î¤j¤p(³z©ú¤]ºâ)¶i¦æ¥Í¦¨¡A¾É­P¨Ç³\¤j¤p¸¨®t 
-			¬°¤FÅı³¾¬İ°_¨Ó¹³¬O¼²¤W¥h¡A©Ò¥HÅı¥¦°½°½¦V«e²¾°Ê*/
+	for (size_t i {}; i < pipes.size(); i++) { //åˆ©ç”¨size_t éæ­·ç‰©ä»¶  
+		if(pipes[i].getGlobalBounds().intersects(bird->getGlobalBounds())){ //ç”Ÿæˆç®¡é“ã€èˆ‡é³¥çš„çŸ©å½¢ï¼Œå¦‚æœå…©çŸ©å½¢äº¤ç–Šï¼ŒåŸ·è¡Œ 
+			/*/å› ç‚ºç”ŸæˆçŸ©å½¢æœƒè®“ç®¡é“ã€é³¥åœ–ç‰‡ä»¥æœªæ—‹è½‰çš„ï¼Œä½†ç¸®æ”¾éçš„çŸ©å½¢å¤§å°(é€æ˜ä¹Ÿç®—)é€²è¡Œç”Ÿæˆï¼Œå°è‡´äº›è¨±å¤§å°è½å·® 
+			ç‚ºäº†è®“é³¥çœ‹èµ·ä¾†åƒæ˜¯æ’ä¸Šå»ï¼Œæ‰€ä»¥è®“å®ƒå·å·å‘å‰ç§»å‹•*/
 			bird->move(15.f, 0); 
-			if( pipes[i].getScale().y < 0 ) //¦pªG(¸I¼²ºŞ¹Dy¶bªº¤ñ¨Ò¤p©ó0¡A§Y¬O¤WºŞ¹D)¡A°õ¦æ 
-				bird->move(0,-10.f); //µy·L¦V¤W 
-			else //­Y¬°¤UºŞ¹D 
-				bird->move(0,10.f); //µy·L¦V¤U 
-			gameover = true; //¹CÀ¸µ²§ô 
+			if( pipes[i].getScale().y < 0 ) //å¦‚æœ(ç¢°æ’ç®¡é“yè»¸çš„æ¯”ä¾‹å°æ–¼0ï¼Œå³æ˜¯ä¸Šç®¡é“)ï¼ŒåŸ·è¡Œ 
+				bird->move(0,-10.f); //ç¨å¾®å‘ä¸Š 
+			else //è‹¥ç‚ºä¸‹ç®¡é“ 
+				bird->move(0,10.f); //ç¨å¾®å‘ä¸‹ 
+			gameover = true; //éŠæˆ²çµæŸ 
 		}
-		if(pipes[i].getPosition().x < -150 ){ //ºŞ¹Dªºx¶b¦bµe­±¥ª°¼150(¶W¥Xµe­±) 
-			pipes.erase(pipes.begin() + i );  //²M°£ºŞ¹D 
+		if(pipes[i].getPosition().x < -150 ){ //ç®¡é“çš„xè»¸åœ¨ç•«é¢å·¦å´150(è¶…å‡ºç•«é¢) 
+			pipes.erase(pipes.begin() + i );  //æ¸…é™¤ç®¡é“ 
 		} 
-		pipes[i].move(-4.f, 0); //ºŞ¹D¦V¥ª²¾°Ê 
-		if(pipes[i].getPosition().x == 440 && !addscore ){ //·íºŞ¹D¤ñ³¾§ó¾a¥ª°¼¡A¥BÁÙ¥¼¥[¤À 
-			text_score.setString(to_string(++score)); //Åã¥Ü¤À¼Æ¼W¥[ 
-			addscore = true; //³]©w¤w¸g¥[¹L¤À¼Æ¤F¡AÁ×§K¤W¤UºŞ¹D³£¥[¤À 
-		}else //³]©wÁÙ¥¼¥[¹L¤À¼Æ 
+		pipes[i].move(-4.f, 0); //ç®¡é“å‘å·¦ç§»å‹• 
+		if(pipes[i].getPosition().x == 440 && !addscore ){ //ç•¶ç®¡é“æ¯”é³¥æ›´é å·¦å´ï¼Œä¸”é‚„æœªåŠ åˆ† 
+			text_score.setString(to_string(++score)); //é¡¯ç¤ºåˆ†æ•¸å¢åŠ  
+			addscore = true; //è¨­å®šå·²ç¶“åŠ éåˆ†æ•¸äº†ï¼Œé¿å…ä¸Šä¸‹ç®¡é“éƒ½åŠ åˆ† 
+		}else //è¨­å®šé‚„æœªåŠ éåˆ†æ•¸ 
 			addscore = false;
 	}
 }
 
-void FlappyBird::birdAnime(){ //³]©w³¾ªº°Êµe 
-	frame += 0.15f; // ³]©w´V 
-	if( frame > 3 ){ // ·í¤j©ó¤T
-		frame -= 3; // ³]¬°-3¡A»s³y´`Àôªº·PÄ± 
+void FlappyBird::birdAnime(){ //è¨­å®šé³¥çš„å‹•ç•« 
+	frame += 0.15f; // è¨­å®šå¹€ 
+	if( frame > 3 ){ // ç•¶å¤§æ–¼ä¸‰
+		frame -= 3; // è¨­ç‚º-3ï¼Œè£½é€ å¾ªç’°çš„æ„Ÿè¦º 
 	}	
-	bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //³]©w¹Ï¥Ü¨ú¼Ë½d³ò 
+	bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //è¨­å®šåœ–ç¤ºå–æ¨£ç¯„åœï¼Œå‰å…©å€‹å€¼ç‚ºåœ–ç‰‡çš„åº§æ¨™ï¼Œå¾Œå…©å€¼ç‚ºå–æ¨£å¤§å°(å¯¬ã€é«˜) 
 }
 
-void FlappyBird::birdMove(){ //²¾°Ê³¾ 
-	bird->move(0, g); //¦V¤U¼Y¸¨ 
-	g += 0.5f; //³vº¥¼W§Ö 
-	if(bird->getPosition().y>650){ //·í¾ã­Ó³¾¶W¥Xµe­±(y>650) 
-		gameover = true; //¹CÀ¸µ²§ô 
+void FlappyBird::birdMove(){ //ç§»å‹•é³¥ 
+	bird->move(0, g); //å‘ä¸‹å¢œè½ 
+	g += 0.5f; //é€æ¼¸å¢å¿« 
+	if(bird->getPosition().y>650){ //ç•¶æ•´å€‹é³¥è¶…å‡ºç•«é¢(y>650) 
+		gameover = true; //éŠæˆ²çµæŸ 
 	}
 }
 
-void FlappyBird::game(){ //°õ¦æºëÆF²¾°Ê»P³¾ªº¸õÅD©M°Êµe 
-	if(!gameover){ //ÁÙ¨Sµ²§ô¹CÀ¸ 
-		birdAnime(); //©I¥s³¾ªº°Êµe 
-		birdMove(); //©I¥s³¾ªº¦ì²¾ 
-		pipeMove(); //©I¥sºŞ¹Dªº¦ì²¾ 
+void FlappyBird::game(){ //åŸ·è¡Œç²¾éˆç§»å‹•èˆ‡é³¥çš„è·³èºå’Œå‹•ç•« 
+	if(!gameover){ //é‚„æ²’çµæŸéŠæˆ² 
+		birdAnime(); //å‘¼å«é³¥çš„å‹•ç•« 
+		birdMove(); //å‘¼å«é³¥çš„ä½ç§» 
+		pipeMove(); //å‘¼å«ç®¡é“çš„ä½ç§» 
 	}
 }
 
 void FlappyBird::run(){ 
-	while( window->isOpen() ){ //·íµøµ¡ÁÙ¶}µÛ 
-		events(); //©I¥s¨ç¼Æevents¡A¥Î©óÃö³¬µøµ¡¡A­«·s¶}©l¹CÀ¸ 
-		game(); //©I¥s¨ç¼Ægame¡A°õ¦æºëÆF²¾°Ê»P³¾ªº¸õÅD©M°Êµe 
-		draw(); //©I¥s¨ç¼Ædraw¡A¨ê·sµe­±¡A´è¬V¨ÃÅã¥Ü¹Ï¥Ü
-		count++; //±`¼Æ¼W¥[¡A¥Î©óºŞ¹D¥Í¦¨ 
-		if( count == 300 ){ //±`¼Æµ¥©ó300 
-			count = 0; //±`¼Æ­«»s 
+	while( window->isOpen() ){ //ç•¶è¦–çª—é‚„é–‹è‘— 
+		events(); //å‘¼å«å‡½æ•¸eventsï¼Œç”¨æ–¼é—œé–‰è¦–çª—ï¼Œé‡æ–°é–‹å§‹éŠæˆ² 
+		game(); //å‘¼å«å‡½æ•¸gameï¼ŒåŸ·è¡Œç²¾éˆç§»å‹•èˆ‡é³¥çš„è·³èºå’Œå‹•ç•« 
+		draw(); //å‘¼å«å‡½æ•¸drawï¼Œåˆ·æ–°ç•«é¢ï¼Œæ¸²æŸ“ä¸¦é¡¯ç¤ºåœ–ç¤º
+		count++; //å¸¸æ•¸å¢åŠ ï¼Œç”¨æ–¼ç®¡é“ç”Ÿæˆ 
+		if( count == 300 ){ //å¸¸æ•¸ç­‰æ–¼300 
+			count = 0; //å¸¸æ•¸é‡è£½ 
 		}  
 	}
 }
