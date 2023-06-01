@@ -143,3 +143,7 @@ pair<int,long long> setrank::renewrank(pair<string,long long> p)
     //回傳{當前名次,歷史最高分數}
     return {idx+1,v[idx].second};
 }
+/*要用for(int i=0;i<v.size();i++)不然人數沒超過10會bug
+取遊玩紀錄中前十名對v做迴圈0~9就好了
+v[i].first是玩家名稱
+v[i].second是分數*/
