@@ -60,7 +60,7 @@ setrank::setrank()
     //read
     vector<pair<string,long long>> feedback;
     vector<string> data;
-    ifstream ifs("rank.txt", std::ios::in);
+    ifstream ifs("rank.txt", ios::in);
     if (!ifs.is_open()) {
         cout << "Failed to open file.\n";
         return;
@@ -71,6 +71,7 @@ setrank::setrank()
     }
     if(data.size()==1) v={};
     string name="";
+    //取得玩家名稱及分數
     for(int i=0;i<data.size();i++)
     {
         if(i%2==0)
@@ -90,8 +91,10 @@ setrank::setrank()
     v=feedback;
 }
 //更新資料
+//回傳{當前名次,歷史最高分數}
 pair<int,long long> setrank::renewrank(pair<string,long long> p)
 {
+    //取得名次
     int idx=-1;
     for(int i=0;i<v.size();i++)
     {
@@ -109,11 +112,13 @@ pair<int,long long> setrank::renewrank(pair<string,long long> p)
     {
         v[idx].second=max(v[idx].second,p.second);
     }
+    //排序排行榜
     sort(v.begin(),v.end(),[](pair<string,long long> a,pair<string,long long> b)
     {
         if(a.second==b.second) return a.first<b.first;
         return a.second>b.second;
     });
+    //取得排行榜位置，同分取最高名次
     idx=-1;
     for(int i=0;i<v.size();i++)
     {
@@ -135,5 +140,6 @@ pair<int,long long> setrank::renewrank(pair<string,long long> p)
         if(i<v.size()-1) ofs << "\n";
     }
     ofs.close();
+    //回傳{當前名次,歷史最高分數}
     return {idx+1,v[idx].second};
 }
