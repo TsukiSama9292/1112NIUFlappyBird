@@ -1,5 +1,4 @@
 #include<bits/stdc++.h>
-#include "set_rank.h"
 using namespace std;
 //二進位轉字元
 string setrank::binary_to_string(string s)
