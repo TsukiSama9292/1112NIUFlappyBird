@@ -46,7 +46,7 @@ void FlappyBird::setSFML(){ //用於設定初始值
 	pipeTop->setScale(1.5f, -1.5f); //調整大小(比例)，負數為顛倒 
 	
 	/*以下是遊戲結束的字體與文字設定*/
-	font.loadFromFile("./resources/font/flappybird.ttf"); //載入字型 
+	font.loadFromFile("./AllSundries/font/flappybird.ttf"); //載入字型 
 	text_gameover.setFont(font); //套用字型 
 	text_gameover.setString("Press SPACE to restart"); //文字內容設定 
 	text_gameover.setPosition(200, 300); //位置設定 
