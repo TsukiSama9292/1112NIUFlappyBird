@@ -23,13 +23,13 @@ void FlappyBird::setSFML(){ //用於設定初始值
 	//window->setFramerateLimit( 0 ); //無幀數限制，遊戲以最快的速度進行 
 	
 	/*以下是背景的圖與精靈設定*/
-	bg.loadFromFile("./resources/img/background.png"); //載入圖片  
+	bg.loadFromFile("./AllSundries/image/background.png"); //載入圖片  
 	background = new Sprite(); //建立精靈
 	background->setTexture(bg); //精靈圖案設為背景圖
 	//無須設定位置與大小 初始位置為(0,0) 視窗與圖等大 
 	
 	/*以下是鳥的圖與精靈設定*/
-	bd.loadFromFile("./resources/img/flappy.png"); //載入圖片  
+	bd.loadFromFile("./AllSundries/image/bird.png"); //載入圖片  
 	bird = new Sprite(); //建立精靈 
 	bird->setTexture(bd);  //精靈圖案設為鳥 
 	bird->setPosition(500.f - bd.getSize().x / 2.f , 300.f-bd.getSize().y / 2.f); //設定鳥的初始位置 
@@ -37,7 +37,7 @@ void FlappyBird::setSFML(){ //用於設定初始值
 	bird->setTextureRect(IntRect(0, 0, 34, 24)); //取用圖片中，最左側的鳥，前兩個值為圖片的座標，後兩值為取樣大小(寬、高) 
 	
 	/*以下是管道的圖與精靈設定*/
-	pipe.loadFromFile("./resources/img/pipe.png"); //載入圖片
+	pipe.loadFromFile("./AllSundries/image/pipe.png"); //載入圖片
 	pipeBottom = new Sprite(); //建立精靈 
 	pipeTop = new Sprite(); //建立精靈 
 	pipeBottom->setTexture(pipe); //精靈圖案設為管道 
