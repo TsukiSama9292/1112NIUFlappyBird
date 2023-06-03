@@ -1,42 +1,42 @@
 using namespace std;
 using namespace sf;
-enum Status(homepage, inputname, game, gameover, showrank, introduce)gamestatus = homepage;
+enum Status{homepage, inputname, game, gameover, showrank, introduce}gamestatus = homepage;
 	
-	btn_n.loadFromFile("./resources/img/btn_play.png"); //¸ü¤J¹Ï¤ù
-	sbtn_n = new Sprite(); //«Ø¥ßºëÆF  
+	btn_n.loadFromFile("./resources/img/btn_play.png"); //è¼‰å…¥åœ–ç‰‡
+	sbtn_n = new Sprite(); //å»ºç«‹ç²¾éˆ  
 	sbtn_n -> setTexture(btn_n); //
 	//sbtn_n -> setPosition(400.f - btn1.getSize().x / 2.f , 300.f - btn1.getSize().y / 2.f);
-	//sbtn_n -> setScale(1.0f, 1.0f); //½Õ¾ã¤j¤p 
+	//sbtn_n -> setScale(1.0f, 1.0f); //èª¿æ•´å¤§å° 
 	
-	btn_p.loadFromFile("./resources/img/btn_play.png"); //¸ü¤J¹Ï¤ù
-	sbtn_p = new Sprite(); //«Ø¥ßºëÆF  
+	btn_p.loadFromFile("./resources/img/btn_play.png"); //è¼‰å…¥åœ–ç‰‡
+	sbtn_p = new Sprite(); //å»ºç«‹ç²¾éˆ  
 	sbtn_p -> setTexture(btn_p); //
 	//sbtn_p -> setPosition(400.f - btn1.getSize().x / 2.f , 300.f - btn1.getSize().y / 2.f);
-	//sbtn_p -> setScale(1.0f, 1.0f); //½Õ¾ã¤j¤p 
+	//sbtn_p -> setScale(1.0f, 1.0f); //èª¿æ•´å¤§å° 
 	
-	btn_r.loadFromFile("./resources/img/btn_play.png"); //¸ü¤J¹Ï¤ù
-	sbtn_r = new Sprite(); //«Ø¥ßºëÆF  
+	btn_r.loadFromFile("./resources/img/btn_play.png"); //è¼‰å…¥åœ–ç‰‡
+	sbtn_r = new Sprite(); //å»ºç«‹ç²¾éˆ  
 	sbtn_r -> setTexture(btn_r); //
 	//sbtn_r -> setPosition(400.f - btn1.getSize().x / 2.f , 300.f - btn1.getSize().y / 2.f);
-	//sbtn_r -> setScale(1.0f, 1.0f); //½Õ¾ã¤j¤p 
+	//sbtn_r -> setScale(1.0f, 1.0f); //èª¿æ•´å¤§å° 
 	
-	btn_i.loadFromFile("./resources/img/btn_play.png"); //¸ü¤J¹Ï¤ù
-	sbtn_i = new Sprite(); //«Ø¥ßºëÆF  
+	btn_i.loadFromFile("./resources/img/btn_play.png"); //è¼‰å…¥åœ–ç‰‡
+	sbtn_i = new Sprite(); //å»ºç«‹ç²¾éˆ  
 	sbtn_i -> setTexture(btn_i); //
 	//sbtn_i -> setPosition(400.f - btn1.getSize().x / 2.f , 300.f - btn1.getSize().y / 2.f);
-	//sbtn_i -> setScale(1.0f, 1.0f); //½Õ¾ã¤j¤p 
+	//sbtn_i -> setScale(1.0f, 1.0f); //èª¿æ•´å¤§å° 
 	
-	btn_h.loadFromFile("./resources/img/btn_play.png"); //¸ü¤J¹Ï¤ù
-	sbtn_h = new Sprite(); //«Ø¥ßºëÆF  
+	btn_h.loadFromFile("./resources/img/btn_play.png"); //è¼‰å…¥åœ–ç‰‡
+	sbtn_h = new Sprite(); //å»ºç«‹ç²¾éˆ  
 	sbtn_h -> setTexture(btn_n); //
 	//sbtn_h -> setPosition(400.f - btn1.getSize().x / 2.f , 300.f - btn1.getSize().y / 2.f);
-	//sbtn_h -> setScale(1.0f, 1.0f); //½Õ¾ã¤j¤p 
+	//sbtn_h -> setScale(1.0f, 1.0f); //èª¿æ•´å¤§å° 
 	
-	btn_rp.loadFromFile("./resources/img/btn_play.png"); //¸ü¤J¹Ï¤ù
-	sbtn_rp = new Sprite(); //«Ø¥ßºëÆF  
+	btn_rp.loadFromFile("./resources/img/btn_play.png"); //è¼‰å…¥åœ–ç‰‡
+	sbtn_rp = new Sprite(); //å»ºç«‹ç²¾éˆ  
 	sbtn_rp -> setTexture(btn_rp); //
 	//sbtn_rp -> setPosition(400.f - btn1.getSize().x / 2.f , 300.f - btn1.getSize().y / 2.f);
-	//sbtn_rp -> setScale(1.0f, 1.0f); //½Õ¾ã¤j¤p 
+	//sbtn_rp -> setScale(1.0f, 1.0f); //èª¿æ•´å¤§å° 
 
 		
 
@@ -44,7 +44,7 @@ switch(Status)
 		{
 			case homepage:
 				auto e = new Event(); 
-				while( window->isOpen() ){ //·íµøµ¡ÁÙ¶}µÛ 
+				while( window->isOpen() ){ //ç•¶è¦–çª—é‚„é–‹è‘— 
 					window -> clear();
 					window -> draw(*background);
 					window -> draw(*sbtn_n);
@@ -53,19 +53,19 @@ switch(Status)
 					window -> display();
 					while(window->pollEvent(*e)){
 						if (sbtn_n.isMouseOver(window)){
-							//button1->setTextureRect §ï¹Ï¤ù 
+							//button1->setTextureRect æ”¹åœ–ç‰‡ 
 							if (Mouse::isButtonPressed(Mouse::Left)){
 								Status = inputname;
 							}
 						}
 						else if (sbtn_r.isMouseOver(window)){
-							//button1->setTextureRect §ï¹Ï¤ù 
+							//button1->setTextureRect æ”¹åœ–ç‰‡ 
 							if (Mouse::isButtonPressed(Mouse::Left)){
 								Status = showrank;
 							}
 						}
 						else if (sbtn_i.isMouseOver(window)){
-							//button1->setTextureRect §ï¹Ï¤ù 
+							//button1->setTextureRect æ”¹åœ–ç‰‡ 
 							if (Mouse::isButtonPressed(Mouse::Left)){
 								Status = introduce;
 							}
@@ -73,7 +73,7 @@ switch(Status)
 					}
 				}  
 			
-				//button1->setTexture(btn1); //ºëÆF¹Ï®×³]¬°ºÞ¹D
+				//button1->setTexture(btn1); //ç²¾éˆåœ–æ¡ˆè¨­ç‚ºç®¡é“
 				//button1.setPosition(400.f - btn1.getSize().x / 2.f , 300.f - btn1.getSize().y / 2.f);
 				
 				break;
@@ -86,7 +86,7 @@ switch(Status)
 				window -> display(); 
 				while(window->pollEvent(*e)){
 						if (sbtn_p.isMouseOver(window)){
-							//button1->setTextureRect §ï¹Ï¤ù 
+							//button1->setTextureRect æ”¹åœ–ç‰‡ 
 							if (Mouse::isButtonPressed(Mouse::Left)){
 								Status = game;
 							}
@@ -103,13 +103,13 @@ switch(Status)
 				window -> display(); 
 				while(window->pollEvent(*e)){
 						if (sbtn_rp.isMouseOver(window)){
-							//button1->setTextureRect §ï¹Ï¤ù 
+							//button1->setTextureRect æ”¹åœ–ç‰‡ 
 							if (Mouse::isButtonPressed(Mouse::Left)){
 								Status = game;
 							}
 						}
 						else if (sbtn_h.isMouseOver(window)){
-							//button1->setTextureRect §ï¹Ï¤ù 
+							//button1->setTextureRect æ”¹åœ–ç‰‡ 
 							if (Mouse::isButtonPressed(Mouse::Left)){
 								Status = homepage;
 							}
@@ -121,7 +121,7 @@ switch(Status)
 				window -> display(); 
 				while(window->pollEvent(*e)){
 						if (sbtn_h.isMouseOver(window)){
-							//button1->setTextureRect §ï¹Ï¤ù 
+							//button1->setTextureRect æ”¹åœ–ç‰‡ 
 							if (Mouse::isButtonPressed(Mouse::Left)){
 								Status = homepage;
 							}
@@ -133,7 +133,7 @@ switch(Status)
 				window -> display(); 
 				while(window->pollEvent(*e)){
 						if (sbtn_h.isMouseOver(window)){
-							//button1->setTextureRect §ï¹Ï¤ù 
+							//button1->setTextureRect æ”¹åœ–ç‰‡ 
 							if (Mouse::isButtonPressed(Mouse::Left)){
 								Status = homepage;
 							}
