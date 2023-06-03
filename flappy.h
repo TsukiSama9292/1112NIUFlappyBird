@@ -229,7 +229,7 @@ class FlappyBird : protected setrank{
 		else
 			bird->setRotation(frame*2 - 10.f); //旋轉稍微向下看
 		if( count % 150 == 0 ){ //每執行150次時 
-			int pos = rand() % 335 + 25; //設定隨機高度 
+			int pos = rand() % 315 + 25; //設定隨機高度 
 			pipeTop->setPosition(1000, pos);  //上管道設定位置
 			pipeBottom->setPosition(1000, pos + interval); //下管道設定位置 
 			pipes.push_back(*pipeTop); //管道vector新增上管道 
@@ -309,7 +309,7 @@ class FlappyBird : protected setrank{
 			g+=0.05f;
 	}
 	void bgmCircle(){ //音樂重複播放 
-		if(bgm_times>=1330){
+		if(bgm_times>=1320){
 			bgm_times=0; //初始化bgm_times 
 			sound_bgm.play(); //重新播放bgm 
 		}else{
@@ -462,6 +462,7 @@ class FlappyBird : protected setrank{
 						show_name+=c;
 					}
 					gamestatus = _game;
+					sound_bgm.play();
 				}
 			}
 		}else{
@@ -482,6 +483,8 @@ class FlappyBird : protected setrank{
 		if(isMouseOver(sbtn_homepage)){
 			sbtn_homepage->setTextureRect(IntRect(btn_homepage.getSize().x/2.f,0,btn_homepage.getSize().x/2.f,btn_homepage.getSize().y)); //改成滑鼠在上圖片 
 			if (Mouse::isButtonPressed(Mouse::Left)){
+				sound_bgm.play();
+				bgm_times=0;
 				gamestatus = _homepage;
 				g =  frame = 0.f;
 				setPictureSize(bird,&bd,2.5f,3,500,75);
