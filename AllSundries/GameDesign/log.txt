@@ -1,4 +1,4 @@
-目前已知範例的程式因為Dev c++ GCC的版本低於5.0
+Dev c++ GCC的版本低於5.0
 所以無法執行std::shared_ptr和std::make_shared
 故無法使用其快速製作節省記憶體與CPU運算的物件指標方法
 我們目前可以使用一般物件寫法進行coding...
