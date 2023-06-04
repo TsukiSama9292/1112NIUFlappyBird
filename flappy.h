@@ -1,8 +1,10 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <bits/stdc++.h>
 #include "set_rank.h"
 #include "testbox.hpp"
+#include "button.h" 
 #define TEAMNAME "111_2 NO.5 TEAM - Flappy bird"
 #define SOUND_HIT "./AllSundries/sound/hit.wav"
 #define SOUND_ADD "./AllSundries/sound/add.wav"
@@ -13,116 +15,113 @@
 #define BIRD "./AllSundries/image/bird.png"
 #define PIPE "./AllSundries/image/pipe.png"
 #define FONT "./AllSundries/font/flappybird.ttf"
-#define BUTTON_START "./AllSundries/button/play.png"
+#define BUTTON_Play "./AllSundries/button/play.png"
 #define BUTTON_ENTER "./AllSundries/button/enter.png"
 #define BUTTON_RESTART "./AllSundries/button/restart.png"
 #define BUTTON_HOMEPAGE "./AllSundries/button/home.png"
 #define BUTTON_SHOWRANK "./AllSundries/button/rank.png"
 #define BUTTON_INTRODUCE "./AllSundries/button/intro.png"
-//å®œè˜­å¤§å­¸ è³‡å·¥ä¸€ ç¨‹å¼è¨­è¨ˆ ç¬¬äº”çµ„ æœŸæœ«å°ˆæ¡ˆ FlappyBird ä¹‹éŠæˆ²ç¨‹å¼è¨­è¨ˆ  
+//©yÄõ¤j¾Ç ¸ê¤u¤@ µ{¦¡³]­p ²Ä¤­²Õ ´Á¥½±M®× FlappyBird ¤§¹CÀ¸µ{¦¡³]­p  
 using namespace std;
 using namespace sf;
-enum Status{_homepage, _inputname, _game, _gameover, _showrank, _introduce};//éŠæˆ²ç‹€æ…‹ä¹‹enum 
+enum Status{_homepage, _inputname, _game, _gameover, _showrank, _introduce};//¹CÀ¸ª¬ºA¤§enum 
 class FlappyBird : protected setrank{
 	private:
 	Event event;
-	Texture btn_start,btn_enter,btn_restart,btn_homepage,btn_showrank,btn_introduce;
-	Sprite *sbtn_start,*sbtn_enter,*sbtn_restart,*sbtn_homepage,*sbtn_showrank,*sbtn_introduce;
 	float mouse_x,mouse_y,btn_x,btn_y,btn_w,btn_h;	
 	RenderWindow *window;
-	float y,g,frame,interval;
+	float g,frame,interval;
 	int count,bgm_times,now_rank;
-	string name,show_name,showrank,str;
+	string name,showrank,str;
 	long long score,history_high;
 	pair<int,long long> now;
 	SoundBuffer buffer_hit,buffer_wing,buffer_add,buffer_bgm,buffer_no1;
 	Sound sound_hit,sound_wing,sound_add,sound_bgm,sound_no1;
 	Font font;
 	Text text_score,text_rank,text_introduce,text_announce;
-	Texture bg, bd, pipe,btn;
+	Texture bg, bd, pipe;
 	Sprite *background, *bird, *pipeBottom, *pipeTop;
 	vector<Sprite> pipes;
 	bool gameover, addscore;
 	Status gamestatus = _homepage;
 	Textbox *textbox1;
-	void _showRank(){//setranké¡åˆ¥ä¹‹æ‡‰ç”¨_é¡¯ç¤ºæ’è¡Œæ¦œ(åæ¬¡ã€åç¨±ã€åˆ†æ•¸) 
-		showrank="";//é¡¯ç¤ºä¹‹æ–‡å­— 
-		if(v.size()==0)//rank.txtç„¡è³‡æ–™ 
-			showrank="No Data";//é¡¯ç¤ºNo Data 
-		for(int i=0;i<v.size();i++){//éæ­·vector v  
-			showrank+="NO."+to_string(i+1)+" "+v[i].first+" Score:"+to_string(v[i].second)+"\n";//é¡¯ç¤ºæ ¼å¼ 
-			if(i==6)//5äººæ™‚åœä¸‹ 
-				break;//è·³å‡ºforè¿´åœˆ 
+	Button *button_play,*button_enter,*button_restart,*button_home,*button_rank,*button_intro;
+	void _showRank(){//setrankÃş§O¤§À³¥Î_Åã¥Ü±Æ¦æº](¦W¦¸¡B¦WºÙ¡B¤À¼Æ) 
+		showrank="";//Åã¥Ü¤§¤å¦r 
+		if(v.size()==0)//rank.txtµL¸ê®Æ 
+			showrank="No Data";//Åã¥ÜNo Data 
+		for(int i=0;i<v.size();i++){//¹M¾úvector v  
+			showrank+="NO."+to_string(i+1)+" "+v[i].first+" Score:"+to_string(v[i].second)+"\n";//Åã¥Ü®æ¦¡ 
+			if(i==6)//7¤H®É°±¤U 
+				break;//¸õ¥Xfor°j°é 
 		}
-		text_rank.setString(showrank);//è¨­å®šæ–‡å­— 
-		text_rank.setPosition(500-text_rank.getGlobalBounds().width/2.f,250-text_rank.getGlobalBounds().height/2.f);//è¨­å®šä½ç½® 
+		text_rank.setString(showrank);//³]©w¤å¦r 
+		text_rank.setPosition(500-text_rank.getGlobalBounds().width/2.f,250-text_rank.getGlobalBounds().height/2.f);//³]©w¦ì¸m 
 	}
-	void _gameOver(){ //éŠæˆ²çµæŸä¹‹éŸ³æ•ˆã€ç‹€æ…‹ã€ç•¶å‰åæ¬¡é¡¯ç¤ºèˆ‡æ­·å²åˆ†æ•¸ä¹‹é¡¯ç¤º 
-		sound_hit.play(); //æ’­æ”¾æ’æ“ŠéŸ³æ•ˆ
-		gameover = true; //éŠæˆ²çµæŸ 
-		gamestatus=_gameover; //ç‹€æ…‹è¨­å®š 
-		now = renewrank({name,score}); //é‡è£½åˆ†æ•¸æ’è¡Œ 
-		now_rank=now.first; //ç›®å‰çš„åˆ†æ•¸ 
-		history_high=now.second; //æ­·å²æœ€é«˜ç´€éŒ„ 
-		text_rank.setString("NO."+to_string(now_rank)+" "+show_name+" Score:"+to_string(score)+" History:"+to_string(history_high)); //é¡¯ç¤ºæ ¼å¼ 
-		text_rank.setPosition(500-text_rank.getGlobalBounds().width/2.f,187.5f);//è¨­å®šä½ç½® 
-		if(now_rank==1&&score==history_high){//å¦‚æœç›®å‰æ˜¯ç¬¬ä¸€åä¸”åˆ†æ•¸æ˜¯æœ€é«˜ç´€éŒ„ï¼Œæš«åœèƒŒæ™¯éŸ³æ¨‚ï¼Œæ’­æ”¾å‹åˆ©éŸ³æ•ˆ 
-			sound_bgm.stop();//æš«åœèƒŒæ™¯éŸ³æ¨‚ 
-			bgm_times=1000;//è¨­å®šèƒŒæ™¯éŸ³æ¨‚æ™‚é–“ï¼Œç”¨æ–¼ä¸‹æ¬¡å¾ªç’° 
-			sound_no1.play();//æ’­æ”¾å‹åˆ©éŸ³æ¨‚ 
+	void _gameOver(){ //¹CÀ¸µ²§ô¤§­µ®Ä¡Bª¬ºA¡B·í«e¦W¦¸Åã¥Ü»P¾ú¥v¤À¼Æ¤§Åã¥Ü 
+		sound_hit.play(); //¼½©ñ¼²À»­µ®Ä
+		gameover = true; //¹CÀ¸µ²§ô 
+		gamestatus=_gameover; //ª¬ºA³]©w 
+		now = renewrank({name,score}); //­«»s¤À¼Æ±Æ¦æ 
+		now_rank=now.first; //¥Ø«eªº¤À¼Æ 
+		history_high=now.second; //¾ú¥v³Ì°ª¬ö¿ı 
+		text_rank.setString("NO."+to_string(now_rank)+" "+name+" Score:"+to_string(score)+" History:"+to_string(history_high)); //Åã¥Ü®æ¦¡ 
+		text_rank.setPosition(500-text_rank.getGlobalBounds().width/2.f,187.5f);//³]©w¦ì¸m 
+		if(now_rank==1&&score==history_high){//¦pªG¥Ø«e¬O²Ä¤@¦W¥B¤À¼Æ¬O³Ì°ª¬ö¿ı¡A¼È°±­I´º­µ¼Ö¡A¼½©ñ³Ó§Q­µ®Ä 
+			sound_bgm.stop();//¼È°±­I´º­µ¼Ö 
+			bgm_times=1000;//³]©w­I´º­µ¼Ö®É¶¡¡A¥Î©ó¤U¦¸´`Àô 
+			sound_no1.play();//¼½©ñ³Ó§Q­µ¼Ö 
 		}		
 	}
-	void setSFML(){ //ç”¨æ–¼è¨­å®šåˆå§‹å€¼
-		//åƒæ•¸è¨­å®š 
-		name="";//æ¸…ç©ºname 
-		show_name="";//æ¸…ç©ºshow_name
-		g = 2.0f;//é è¨­é¦–é é³¥å‘ä¸‹ 
-		frame = 0.f; //è¨­å®šåˆå§‹é‡é‡ã€å¹€(ç”¨æ–¼è¨­å®šé³¥çš„åœ–ç¤ºèˆ‡å‚¾è§’) 
-		interval = 240.f; //è¨­å®šç®¡é“å€é–“ 
-		count = 0; //å¸¸æ•¸-ç”¨æ–¼ç”Ÿæˆç®¡é“
-		bgm_times = 0; //è¨­å®šèƒŒæ™¯éŸ³æ¨‚æ’­æ”¾ä¹‹æ­£è¨˜æ•¸ 
-		gameover = addscore = false;  //çµæŸã€åŠ åˆ†ç‚ºå¦ 
-		score = 0;  //åˆ†æ•¸ç‚º0 
-		//è¦–çª—è¨­å®š 
-		window = new RenderWindow(VideoMode(1000, 600),TEAMNAME); //è¦–çª—è¨­å®š 
-		window->setPosition(Vector2i(0, 0)); //åˆå§‹åŒ–è¦–çª—åº§æ¨™å·¦ä¸Šè§’(0,0) 
-		window->setKeyRepeatEnabled(true); //å¯ä»¥æŒ‰ä¸‹æŒ‰éˆ•ï¼Œæœƒé‡è¤‡åˆ¤æ–· 
-		//èª¿æ§éŠæˆ²é€Ÿåº¦ 
-		window->setFramerateLimit( 60 ); //é™åˆ¶æœ€å¤§å¹€æ•¸ï¼Œç”±æ–¼å®ƒåœ¨å…§éƒ¨ä½¿ç”¨ sf::sleepï¼Œå…¶ç²¾åº¦å–æ±ºæ–¼åº•å±¤æ“ä½œç³»çµ±ï¼Œçµæœä¹Ÿå¯èƒ½æœ‰é»ä¸ç²¾ç¢ºï¼Œ
-		//window->setFramerateLimit( 0 ); //ç„¡å¹€æ•¸é™åˆ¶ï¼ŒéŠæˆ²ä»¥æœ€å¿«çš„é€Ÿåº¦é€²è¡Œ 
-		//textboxä¹‹æ‡‰ç”¨ 
-		textbox1 = new Textbox(40,Color::White,true);//å­—é«”40ï¼Œç™½å­— 
-		/*ä»¥ä¸‹æ˜¯èƒŒæ™¯çš„åœ–èˆ‡ç²¾éˆè¨­å®š*/
-		if(!bg.loadFromFile(BACKGROUND))//è¼‰å…¥åœ–ç‰‡
+	void setSFML(){ //¥Î©ó³]©wªì©l­È
+		//°Ñ¼Æ³]©w 
+		name=""; //²MªÅname
+		g = frame = 0.f;; //¹w³]­º­¶³¾¦V¤U¡B´V(¥Î©ó³]©w³¾ªº¹Ï¥Ü»P¶É¨¤) 
+		interval = 240.f; //³]©wºŞ¹D°Ï¶¡ 
+		count = 0; //±`¼Æ-¥Î©ó¥Í¦¨ºŞ¹D
+		bgm_times = 0; //³]©w­I´º­µ¼Ö¼½©ñ¤§¥¿°O¼Æ 
+		gameover = addscore = false;  //µ²§ô¡B¥[¤À¬°§_ 
+		score = 0;  //¤À¼Æ¬°0 
+		//µøµ¡³]©w 
+		window = new RenderWindow(VideoMode(1000, 600),TEAMNAME); //µøµ¡³]©w 
+		window->setPosition(Vector2i(0, 0)); //ªì©l¤Æµøµ¡®y¼Ğ¥ª¤W¨¤(0,0) 
+		window->setKeyRepeatEnabled(true); //¥i¥H«ö¤U«ö¶s¡A·|­«½Æ§PÂ_ 
+		//½Õ±±¹CÀ¸³t«× 
+		window->setFramerateLimit( 60 ); //­­¨î³Ì¤j´V¼Æ¡A¥Ñ©ó¥¦¦b¤º³¡¨Ï¥Î sf::sleep¡A¨äºë«×¨ú¨M©ó©³¼h¾Ş§@¨t²Î¡Aµ²ªG¤]¥i¯à¦³ÂI¤£ºë½T¡A
+		//window->setFramerateLimit( 0 ); //µL´V¼Æ­­¨î¡A¹CÀ¸¥H³Ì§Öªº³t«×¶i¦æ 
+		//textbox¤§À³¥Î 
+		textbox1 = new Textbox(40,Color::White,true);//¦rÅé40¡A¥Õ¦r 
+		/*¥H¤U¬O­I´ºªº¹Ï»PºëÆF³]©w*/
+		if(!bg.loadFromFile(BACKGROUND))//¸ü¤J¹Ï¤ù
 			cout<<"Fail loading background.png"<<endl;
-		background = new Sprite(); //å»ºç«‹ç²¾éˆ
-		background -> setTexture(bg); //ç²¾éˆåœ–æ¡ˆè¨­ç‚ºèƒŒæ™¯åœ–
-		//ç„¡é ˆè¨­å®šä½ç½®èˆ‡å¤§å° åˆå§‹ä½ç½®ç‚º(0,0) è¦–çª—èˆ‡åœ–ç­‰å¤§ 
+		background = new Sprite(); //«Ø¥ßºëÆF
+		background -> setTexture(bg); //ºëÆF¹Ï®×³]¬°­I´º¹Ï
+		//µL¶·³]©w¦ì¸m»P¤j¤p ªì©l¦ì¸m¬°(0,0) µøµ¡»P¹Ïµ¥¤j 
 		
-		/*ä»¥ä¸‹æ˜¯é³¥çš„åœ–èˆ‡ç²¾éˆè¨­å®š*/
-		if(!bd.loadFromFile(BIRD))//è¼‰å…¥åœ–ç‰‡
+		/*¥H¤U¬O³¾ªº¹Ï»PºëÆF³]©w*/
+		if(!bd.loadFromFile(BIRD))//¸ü¤J¹Ï¤ù
 			cout<<"Fail loading bird.png"<<endl;  
-		bird = new Sprite(); //å»ºç«‹ç²¾éˆ 
+		bird = new Sprite(); //«Ø¥ßºëÆF 
 		setPictureSize(bird,&bd,2.5f,3,500,75);
 		
-		/*ä»¥ä¸‹æ˜¯ç®¡é“çš„åœ–èˆ‡ç²¾éˆè¨­å®š*/
-		if(!pipe.loadFromFile(PIPE))//è¼‰å…¥åœ–ç‰‡ 
+		/*¥H¤U¬OºŞ¹Dªº¹Ï»PºëÆF³]©w*/
+		if(!pipe.loadFromFile(PIPE))//¸ü¤J¹Ï¤ù 
 			cout<<"Fail loading pipe.png"<<endl;
-		pipe.loadFromFile(PIPE); //è¼‰å…¥åœ–ç‰‡
-		pipeBottom = new Sprite(); //å»ºç«‹ç²¾éˆ 
-		pipeTop = new Sprite(); //å»ºç«‹ç²¾éˆ 
-		pipeBottom->setTexture(pipe); //ç²¾éˆåœ–æ¡ˆè¨­ç‚ºç®¡é“ 
-		pipeTop->setTexture(pipe); //ç²¾éˆåœ–æ¡ˆè¨­ç‚ºç®¡é“ 
-		pipeBottom->setScale(1.5f, 1.5f); //èª¿æ•´å¤§å°(æ¯”ä¾‹)
-		pipeTop->setScale(1.5f, -1.5f); //èª¿æ•´å¤§å°(æ¯”ä¾‹)ï¼Œè² æ•¸ç‚ºé¡›å€’ 
+		pipe.loadFromFile(PIPE); //¸ü¤J¹Ï¤ù
+		pipeBottom = new Sprite(); //«Ø¥ßºëÆF 
+		pipeTop = new Sprite(); //«Ø¥ßºëÆF 
+		pipeBottom->setTexture(pipe); //ºëÆF¹Ï®×³]¬°ºŞ¹D 
+		pipeTop->setTexture(pipe); //ºëÆF¹Ï®×³]¬°ºŞ¹D 
+		pipeBottom->setScale(1.5f, 1.5f); //½Õ¾ã¤j¤p(¤ñ¨Ò)
+		pipeTop->setScale(1.5f, -1.5f); //½Õ¾ã¤j¤p(¤ñ¨Ò)¡A­t¼Æ¬°ÄA­Ë 
 		
-		if(!font.loadFromFile(FONT))//è¼‰å…¥å­—å‹ 
+		if(!font.loadFromFile(FONT))//¸ü¤J¦r«¬ 
 			cout<<"Fail loading flappybird.ttf"<<endl; 
 		
-		/*ä»¥ä¸‹æ˜¯åˆ†æ•¸çš„å­—é«”èˆ‡æ–‡å­—è¨­å®š*/
+		/*¥H¤U¬O¤À¼Æªº¦rÅé»P¤å¦r³]©w*/
 		str=to_string(score);
 		setTextSFML(&text_score,10.f,10.f,50,str);
-		/*ä»¥ä¸‹æ˜¯å­—é«”èˆ‡æ–‡å­—è¨­å®š*/
+		/*¥H¤U¬O¦rÅé»P¤å¦r³]©w*/
 		str="";
 		setTextSFML(&text_rank,10.f,250.f,50,str);
 		str="This Flappy Bird game is created by B1143007 Lee Min-Chen, B114\n3009 Wu Bing-Rong, B1143015 Lin Xuan-You, B1143021 Lin Cheng-Wei\n, B1143027 ChenBo-Hao, and B1143036 Huang Qi-Ting, is a simple \nbut addictive game. Guide the bird through pipes by tapping the \nscreen or pressing spacebar. Avoid collisions with pipes and \nthe ground. Score points for each successful passage. \nChallenge yourself with increasing difficulty. Aim for the \nhighest score and compete with friends.";
@@ -131,352 +130,308 @@ class FlappyBird : protected setrank{
 		setTextSFML(&text_announce,100.f,100.f,40,str);
 
 		
-		/*ä»¥ä¸‹æ˜¯éŸ³æ•ˆè¨­å®š*/
-		if(!buffer_hit.loadFromFile(SOUND_HIT)) //è¼‰å…¥éŸ³æ•ˆ_hit 
-			cout<<"Fail loading hit.wav"<<endl; //è¼‰å…¥å¤±æ•—_hit 
-		if(!buffer_wing.loadFromFile(SOUND_WING)) //è¼‰å…¥éŸ³æ•ˆ_wing
-			cout<<"Fail loading wing.wav"<<endl; //è¼‰å…¥å¤±æ•—_wing 
-		if(!buffer_add.loadFromFile(SOUND_ADD)) //è¼‰å…¥éŸ³æ•ˆ_add
-			cout<<"Fail loading add.wav"<<endl;	//è¼‰å…¥å¤±æ•—_add
-		if(!buffer_bgm.loadFromFile(SOUND_BGM)) //è¼‰å…¥éŸ³æ•ˆ_bgm
-			cout<<"Fail loading bgm.wav"<<endl; //è¼‰å…¥å¤±æ•—_bgm
-		if(!buffer_no1.loadFromFile(SOUND_NO1)) //è¼‰å…¥éŸ³æ•ˆ_no1
-			cout<<"Fail loading no1.wav"<<endl; //è¼‰å…¥å¤±æ•—_no1
-		sound_hit.setBuffer(buffer_hit); //éŸ³æ•ˆæ’­æ”¾å™¨è¨­å®š_hit 
-		sound_wing.setBuffer(buffer_wing); //éŸ³æ•ˆæ’­æ”¾å™¨è¨­å®š_wing
-		sound_add.setBuffer(buffer_add); //éŸ³æ•ˆæ’­æ”¾å™¨è¨­å®š_add
-		sound_bgm.setBuffer(buffer_bgm); //éŸ³æ•ˆæ’­æ”¾å™¨è¨­å®š_bgm 
-		sound_no1.setBuffer(buffer_no1); //éŸ³æ•ˆæ’­æ”¾å™¨è¨­å®š_no1
-		/*æŒ‰éˆ•ç²¾éˆå»ºç«‹*/ 
-		sbtn_start=new Sprite(); 
-		sbtn_showrank=new Sprite();
-		sbtn_introduce=new Sprite();
-		sbtn_restart=new Sprite();
-		sbtn_enter=new Sprite();
-		sbtn_homepage=new Sprite();
-		/*æŒ‰éˆ•åœ–ç‰‡è¼‰å…¥*/ 
-		btn_start.loadFromFile(BUTTON_START);
-		btn_showrank.loadFromFile(BUTTON_SHOWRANK);
-		btn_introduce.loadFromFile(BUTTON_INTRODUCE);
-		btn_restart.loadFromFile(BUTTON_RESTART);
-		btn_enter.loadFromFile(BUTTON_ENTER);
-		btn_homepage.loadFromFile(BUTTON_HOMEPAGE);
-		/*æŒ‰éˆ•ç²¾éˆã€åœ–ç‰‡ã€ä½ç½®è¨­å®š*/ 
-		setPictureSize(sbtn_start,&btn_start,0.4f,2,500.f,250.f);
-		setPictureSize(sbtn_showrank,&btn_showrank,0.4f,2,500.f,375.f);
-		setPictureSize(sbtn_introduce,&btn_introduce,0.4f,2,500.f,500.f);
-		setPictureSize(sbtn_restart,&btn_restart,0.4f,2,500.f,375.f);
-		setPictureSize(sbtn_enter,&btn_enter,0.4f,2,500.f,500.f);
-		setPictureSize(sbtn_homepage,&btn_homepage,0.4f,2,500.f,500.f);
-		
-		textbox1->setFont(font);
-		textbox1->setPosition({240,100});  //textboxä½ç½® 
-		textbox1->setLimit(true,20);  //è¨­å®šæ˜¯å¦è¨­é™andå­—æ•¸é™åˆ¶
-		changeWindow();
+		/*¥H¤U¬O­µ®Ä³]©w*/
+		if(!buffer_hit.loadFromFile(SOUND_HIT)) //¸ü¤J­µ®Ä_hit 
+			cout<<"Fail loading hit.wav"<<endl; //¸ü¤J¥¢±Ñ_hit 
+		if(!buffer_wing.loadFromFile(SOUND_WING)) //¸ü¤J­µ®Ä_wing
+			cout<<"Fail loading wing.wav"<<endl; //¸ü¤J¥¢±Ñ_wing 
+		if(!buffer_add.loadFromFile(SOUND_ADD)) //¸ü¤J­µ®Ä_add
+			cout<<"Fail loading add.wav"<<endl;	//¸ü¤J¥¢±Ñ_add
+		if(!buffer_bgm.loadFromFile(SOUND_BGM)) //¸ü¤J­µ®Ä_bgm
+			cout<<"Fail loading bgm.wav"<<endl; //¸ü¤J¥¢±Ñ_bgm
+		if(!buffer_no1.loadFromFile(SOUND_NO1)) //¸ü¤J­µ®Ä_no1
+			cout<<"Fail loading no1.wav"<<endl; //¸ü¤J¥¢±Ñ_no1
+		sound_hit.setBuffer(buffer_hit); //­µ®Ä¼½©ñ¾¹³]©w_hit 
+		sound_wing.setBuffer(buffer_wing); //­µ®Ä¼½©ñ¾¹³]©w_wing
+		sound_add.setBuffer(buffer_add); //­µ®Ä¼½©ñ¾¹³]©w_add
+		sound_bgm.setBuffer(buffer_bgm); //­µ®Ä¼½©ñ¾¹³]©w_bgm 
+		sound_no1.setBuffer(buffer_no1); //­µ®Ä¼½©ñ¾¹³]©w_no1
+				
+		textbox1->setFont(font); //³]©w¦rÅé 
+		textbox1->setPosition({240,100});  //textbox¦ì¸m 
+		textbox1->setLimit(true,20);  //³]©w¬O§_³]­­and¦r¼Æ­­¨î
+		/*ButtonÃş§Oª«¥ó¤§´ú¸Õ*/
+		str=BUTTON_Play; //str³]¬°«ö¶s¹Ï¤ù¦ì¸m 
+		button_play=new Button(str,0.4f,500.f,250.f); //«ö¶splayª«¥ó³]©w(¯¾²z¡BºëÆF¡B¤j¤p¡B¦ì¸m) 
+		str=BUTTON_ENTER; //str³]¬°«ö¶s¹Ï¤ù¦ì¸m  
+		button_enter=new Button(str,0.4f,500.f,375.f); //«ö¶senterª«¥ó³]©w(¯¾²z¡BºëÆF¡B¤j¤p¡B¦ì¸m)  
+		str=BUTTON_RESTART; //str³]¬°«ö¶s¹Ï¤ù¦ì¸m  
+		button_restart=new Button(str,0.4f,500.f,375.f); //«ö¶srestartª«¥ó³]©w(¯¾²z¡BºëÆF¡B¤j¤p¡B¦ì¸m)  
+		str=BUTTON_SHOWRANK; //str³]¬°«ö¶s¹Ï¤ù¦ì¸m  
+		button_rank=new Button(str,0.4f,500.f,375.f); //«ö¶srankª«¥ó³]©w(¯¾²z¡BºëÆF¡B¤j¤p¡B¦ì¸m)  
+		str=BUTTON_HOMEPAGE; //str³]¬°«ö¶s¹Ï¤ù¦ì¸m  
+		button_home=new Button(str,0.4f,500.f,500.f); //«ö¶shomeª«¥ó³]©w(¯¾²z¡BºëÆF¡B¤j¤p¡B¦ì¸m)  
+		str=BUTTON_INTRODUCE; //str³]¬°«ö¶s¹Ï¤ù¦ì¸m  
+		button_intro=new Button(str,0.4f,500.f,500.f); //«ö¶sintroª«¥ó³]©w(¯¾²z¡BºëÆF¡B¤j¤p¡B¦ì¸m)  
+		changeWindow(); //©I¥sµøµ¡§ïÅÜ¨ç¼Æ 
 	}
-	void setTextSFML(Text *text_show,float px,float py,int size,string str){//è¨­å®šTextä¹‹æ ¼å¼èˆ‡æ–‡å­—å…§å®¹ 
-		text_show->setFont(font); //å¥—ç”¨å­—å‹ 
-		text_show->setString(str); //æ–‡å­—å…§å®¹è¨­å®š  
-		text_show->setPosition(px, py); //ä½ç½®è¨­å®š
-		text_show->setCharacterSize(size); //å­—é«”å¤§å°è¨­å®š
-		text_show->setOutlineThickness(3); //å­—é«”ç²—ç´°è¨­å®š
+	void setTextSFML(Text *text_show,float px,float py,int size,string str){//³]©wText¤§®æ¦¡»P¤å¦r¤º®e 
+		text_show->setFont(font); //®M¥Î¦r«¬ 
+		text_show->setString(str); //¤å¦r¤º®e³]©w  
+		text_show->setPosition(px, py); //¦ì¸m³]©w
+		text_show->setCharacterSize(size); //¦rÅé¤j¤p³]©w
+		text_show->setOutlineThickness(3); //¦rÅé²Ê²Ó³]©w
+	}	
+	void setPictureSize(Sprite *spt,Texture *txt,float resize,float cut,float px,float py){//³]©wºëÆF¤§¹Ï¤ù¡B¤j¤p¡B¦ì¸m 
+		spt->setTexture(*txt);//¹Ï¤ù³]©w 
+		spt->setScale(resize,resize);//¤j¤p(¤ñ¨Ò) 
+		spt->setTextureRect(IntRect(0,0,txt->getSize().x/cut,txt->getSize().y));//¨ú¹Ï¤ù¯S©w½d³ò 
+		spt->setPosition(px-spt->getGlobalBounds().width/2.f,py-spt->getGlobalBounds().height/2.f);//³]©w¦ì¸m 
 	}
-	
-	void setPictureSize(Sprite *spt,Texture *txt,float resize,float cut,float px,float py){//è¨­å®šç²¾éˆä¹‹åœ–ç‰‡ã€å¤§å°ã€ä½ç½® 
-		spt->setTexture(*txt);//åœ–ç‰‡è¨­å®š 
-		spt->setScale(resize,resize);//å¤§å°(æ¯”ä¾‹) 
-		spt->setTextureRect(IntRect(0,0,txt->getSize().x/cut,txt->getSize().y));//å–åœ–ç‰‡ç‰¹å®šç¯„åœ 
-		spt->setPosition(px-spt->getGlobalBounds().width/2.f,py-spt->getGlobalBounds().height/2.f);//è¨­å®šä½ç½® 
-	}
-	void events(){ //ç”¨æ–¼é—œé–‰è¦–çª—ï¼Œé‡æ–°é–‹å§‹éŠæˆ² 
-		auto e = new Event(); //è¦–çª—äº‹ä»¶ç‰©ä»¶è¨­å®š 
-		while( window->pollEvent( *e ) ){ //äº‹ä»¶ç™¼ç”Ÿæ™‚åŸ·è¡Œ 
-			if( e->type == Event::Closed){ //äº‹ä»¶è‹¥ç‚ºé»æ“Šé—œé–‰è¦–çª— 
-				window->close(); //è¦–çª—ç‰©ä»¶é—œé–‰ï¼Œå³éŠæˆ²é—œé–‰ 
+	void events(){ //¥Î©óÃö³¬µøµ¡¡A­«·s¶}©l¹CÀ¸ 
+		auto e = new Event(); //µøµ¡¨Æ¥óª«¥ó³]©w 
+		while( window->pollEvent( *e ) ){ //¨Æ¥óµo¥Í®É°õ¦æ 
+			if( e->type == Event::Closed){ //¨Æ¥ó­Y¬°ÂIÀ»Ãö³¬µøµ¡ 
+				window->close(); //µøµ¡ª«¥óÃö³¬¡A§Y¹CÀ¸Ãö³¬ 
 			}
 		}
 	}
-	void draw(){ //åˆ·æ–°ç•«é¢ï¼Œæ¸²æŸ“ä¸¦é¡¯ç¤ºåœ–ç¤º 
-		window->clear(); //æ¸…é™¤æ•´å€‹ç•«é¢ï¼Œç”¨æ–¼åˆ·æ–°ç•«é¢ï¼Œé”åˆ°å‹•ç•«æ•ˆæœ 
-		window->draw(*background); //å¾…åŸ·è¡Œé¡¯ç¤ºèƒŒæ™¯ 
-		for(auto &p:pipes){ //éæ­·æ‰€æœ‰ç®¡é“ 
-			window->draw(p); //å¾…åŸ·è¡Œé¡¯ç¤ºç®¡é“ 
+	void draw(){ //¨ê·sµe­±¡A´è¬V¨ÃÅã¥Ü¹Ï¥Ü 
+		window->clear(); //²M°£¾ã­Óµe­±¡A¥Î©ó¨ê·sµe­±¡A¹F¨ì°Êµe®ÄªG 
+		window->draw(*background); //«İ°õ¦æÅã¥Ü­I´º 
+		for(auto &p:pipes){ //¹M¾ú©Ò¦³ºŞ¹D 
+			window->draw(p); //«İ°õ¦æÅã¥ÜºŞ¹D 
 		}
-		window->draw(*bird); //å¾…åŸ·è¡Œé¡¯ç¤ºé³¥ 
-		window->draw(text_score); //å¾…åŸ·è¡Œé¡¯ç¤ºåˆ†æ•¸ 
-		window->display(); //å‘¼å«OpenGLæ¸²æŸ“å®Œæˆå¾Œèª¿ç”¨(å°ç•¶å‰å¹€çš„æ‰€æœ‰å¾…é¡¯ç¤ºåœ–åƒé¡¯ç¤ºåœ¨ç•«é¢ä¸Š) 
+		window->draw(*bird); //«İ°õ¦æÅã¥Ü³¾ 
+		window->draw(text_score); //«İ°õ¦æÅã¥Ü¤À¼Æ 
+		window->display(); //©I¥sOpenGL´è¬V§¹¦¨«á½Õ¥Î(¹ï·í«e´Vªº©Ò¦³«İÅã¥Ü¹Ï¹³Åã¥Ü¦bµe­±¤W) 
 	}
-	void pipeMove(){ //ç”¨æ–¼ç§»å‹•æ°´ç®¡ï¼Œèˆ‡é³¥çš„è·³èº 
-		if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25){ //é«˜åº¦25ç¦æ­¢å¾€ä¸Š
-			sound_wing.play(); //æ’­æ”¾æ®ç¿…è†€éŸ³æ•ˆ 
-			bird->setRotation(-frame*2 - 10.f); //æ—‹è½‰ç¨å¾®å‘ä¸Šçœ‹ 
-			g = -8.f; //è¨­å®šé‡é‡å‘ä¸‹ 
+	void pipeMove(){ //¥Î©ó²¾°Ê¤ôºŞ¡A»P³¾ªº¸õÅD 
+		if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25){ //°ª«×25¸T¤î©¹¤W
+			sound_wing.play(); //¼½©ñ´§¯Í»H­µ®Ä 
+			bird->setRotation(-frame*2 - 10.f); //±ÛÂàµy·L¦V¤W¬İ 
+			g = -8.f; //³]©w­«¶q¦V¤U 
 		}
 		else
-			bird->setRotation(frame*2 - 10.f); //æ—‹è½‰ç¨å¾®å‘ä¸‹çœ‹
-		if( count % 150 == 0 ){ //æ¯åŸ·è¡Œ150æ¬¡æ™‚ 
-			int pos = rand() % 315 + 25; //è¨­å®šéš¨æ©Ÿé«˜åº¦ 
-			pipeTop->setPosition(1000, pos);  //ä¸Šç®¡é“è¨­å®šä½ç½®
-			pipeBottom->setPosition(1000, pos + interval); //ä¸‹ç®¡é“è¨­å®šä½ç½® 
-			pipes.push_back(*pipeTop); //ç®¡é“vectoræ–°å¢ä¸Šç®¡é“ 
-			pipes.push_back(*pipeBottom); //ç®¡é“vectoræ–°å¢ä¸‹ç®¡é“  
+			bird->setRotation(frame*2 - 10.f); //±ÛÂàµy·L¦V¤U¬İ
+		if( count % 150 == 0 ){ //¨C°õ¦æ150¦¸®É 
+			int pos = rand() % 315 + 25; //³]©wÀH¾÷°ª«× 
+			pipeTop->setPosition(1000, pos);  //¤WºŞ¹D³]©w¦ì¸m
+			pipeBottom->setPosition(1000, pos + interval); //¤UºŞ¹D³]©w¦ì¸m 
+			pipes.push_back(*pipeTop); //ºŞ¹Dvector·s¼W¤WºŞ¹D 
+			pipes.push_back(*pipeBottom); //ºŞ¹Dvector·s¼W¤UºŞ¹D  
 		}
-		for (size_t i {}; i < pipes.size(); i++) { //åˆ©ç”¨size_t éæ­·ç‰©ä»¶  
-			if(pipes[i].getGlobalBounds().intersects(bird->getGlobalBounds())){ //ç”Ÿæˆç®¡é“ã€èˆ‡é³¥çš„çŸ©å½¢ï¼Œå¦‚æœå…©çŸ©å½¢äº¤ç–Šï¼ŒåŸ·è¡Œ 
-				/*/å› ç‚ºç”ŸæˆçŸ©å½¢æœƒè®“ç®¡é“ã€é³¥åœ–ç‰‡ä»¥æœªæ—‹è½‰çš„ï¼Œä½†ç¸®æ”¾éçš„çŸ©å½¢å¤§å°(é€æ˜ä¹Ÿç®—)é€²è¡Œç”Ÿæˆï¼Œå°è‡´äº›è¨±å¤§å°è½å·® 
-				ç‚ºäº†è®“é³¥çœ‹èµ·ä¾†åƒæ˜¯æ’ä¸Šå»ï¼Œæ‰€ä»¥è®“å®ƒå·å·å‘å‰ç§»å‹•*/
+		for (size_t i {}; i < pipes.size(); i++) { //§Q¥Îsize_t ¹M¾úª«¥ó  
+			if(pipes[i].getGlobalBounds().intersects(bird->getGlobalBounds())){ //¥Í¦¨ºŞ¹D¡B»P³¾ªº¯x§Î¡A¦pªG¨â¯x§Î¥æÅ|¡A°õ¦æ 
+				/*/¦]¬°¥Í¦¨¯x§Î·|ÅıºŞ¹D¡B³¾¹Ï¤ù¥H¥¼±ÛÂàªº¡A¦ıÁY©ñ¹Lªº¯x§Î¤j¤p(³z©ú¤]ºâ)¶i¦æ¥Í¦¨¡A¾É­P¨Ç³\¤j¤p¸¨®t 
+				¬°¤FÅı³¾¬İ°_¨Ó¹³¬O¼²¤W¥h¡A©Ò¥HÅı¥¦°½°½¦V«e²¾°Ê*/
 				bird->move(15.f, 0); 
-				if( pipes[i].getScale().y < 0 ) //å¦‚æœ(ç¢°æ’ç®¡é“yè»¸çš„æ¯”ä¾‹å°æ–¼0ï¼Œå³æ˜¯ä¸Šç®¡é“)ï¼ŒåŸ·è¡Œ 
-					bird->move(0,-10.f); //ç¨å¾®å‘ä¸Š 
-				else //è‹¥ç‚ºä¸‹ç®¡é“ 
-					bird->move(0,10.f); //ç¨å¾®å‘ä¸‹ 
-				_gameOver();//å‘¼å«éŠæˆ²çµæŸä¹‹å‡½æ•¸ 
+				if( pipes[i].getScale().y < 0 ) //¦pªG(¸I¼²ºŞ¹Dy¶bªº¤ñ¨Ò¤p©ó0¡A§Y¬O¤WºŞ¹D)¡A°õ¦æ 
+					bird->move(0,-10.f); //µy·L¦V¤W 
+				else //­Y¬°¤UºŞ¹D 
+					bird->move(0,10.f); //µy·L¦V¤U 
+				_gameOver();//©I¥s¹CÀ¸µ²§ô¤§¨ç¼Æ 
 			}
-			if(pipes[i].getPosition().x < -150 ){ //ç®¡é“çš„xè»¸åœ¨ç•«é¢å·¦å´150(è¶…å‡ºç•«é¢) 
-				pipes.erase(pipes.begin() + i );  //æ¸…é™¤ç®¡é“ 
+			if(pipes[i].getPosition().x < -150 ){ //ºŞ¹Dªºx¶b¦bµe­±¥ª°¼150(¶W¥Xµe­±) 
+				pipes.erase(pipes.begin() + i );  //²M°£ºŞ¹D 
 			} 
-			pipes[i].move(-4.f, 0); //ç®¡é“å‘å·¦ç§»å‹• 
-			if(pipes[i].getPosition().x == 408 && !addscore ){ //ç•¶ç®¡é“æ¯”é³¥æ›´é å·¦å´ï¼Œä¸”é‚„æœªåŠ åˆ† 
-				text_score.setString(to_string(++score)); //é¡¯ç¤ºåˆ†æ•¸å¢åŠ  
-				sound_add.play(); //æ’­æ”¾åŠ åˆ†éŸ³æ•ˆ  
-				addscore = true; //è¨­å®šå·²ç¶“åŠ éåˆ†æ•¸äº†ï¼Œé¿å…ä¸Šä¸‹ç®¡é“éƒ½åŠ åˆ† 
-			}else //å¦ä¸€å€‹ç®¡é“é€šéï¼Œå°‡å…¶è¨­å®šé‚„æœªåŠ éåˆ†æ•¸ï¼Œä½¿ä¸‹æ¬¡èƒ½ç¹¼çºŒåŠ åˆ† 
+			pipes[i].move(-4.f, 0); //ºŞ¹D¦V¥ª²¾°Ê 
+			if(pipes[i].getPosition().x == 408 && !addscore ){ //·íºŞ¹D¤ñ³¾§ó¾a¥ª°¼¡A¥BÁÙ¥¼¥[¤À 
+				text_score.setString(to_string(++score)); //Åã¥Ü¤À¼Æ¼W¥[ 
+				sound_add.play(); //¼½©ñ¥[¤À­µ®Ä  
+				addscore = true; //³]©w¤w¸g¥[¹L¤À¼Æ¤F¡AÁ×§K¤W¤UºŞ¹D³£¥[¤À 
+			}else //¥t¤@­ÓºŞ¹D³q¹L¡A±N¨ä³]©wÁÙ¥¼¥[¹L¤À¼Æ¡A¨Ï¤U¦¸¯àÄ~Äò¥[¤À 
 				addscore = false;
 		}}
-	void birdAnime(){ //è¨­å®šé³¥çš„å‹•ç•« 
-		frame += 0.15f; // è¨­å®šå¹€ 
-		if( frame > 3 ){ // ç•¶å¤§æ–¼ä¸‰
-			frame -= 3; // è¨­ç‚º-3ï¼Œè£½é€ å¾ªç’°çš„æ„Ÿè¦º 
+	void birdAnime(){ //³]©w³¾ªº°Êµe 
+		frame += 0.15f; // ³]©w´V 
+		if( frame > 3 ){ // ·í¤j©ó¤T
+			frame -= 3; // ³]¬°-3¡A»s³y´`Àôªº·PÄ± 
 		}	
-		bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //è¨­å®šåœ–ç¤ºå–æ¨£ç¯„åœ 
+		bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //³]©w¹Ï¥Ü¨ú¼Ë½d³ò 
 	}	
-	void birdMove(){ //ç§»å‹•é³¥ 
-		bird->move(0, g); //å‘ä¸‹å¢œè½ 
-		g += 0.5f; //é€æ¼¸å¢å¿« 
-		if(bird->getPosition().y>650){ //ç•¶æ•´å€‹é³¥è¶…å‡ºç•«é¢(y>650) 
-			_gameOver(); //å‘¼å«éŠæˆ²å¤±æ•—ä¹‹å‡½æ•¸ 
+	void birdMove(){ //²¾°Ê³¾ 
+		bird->move(0, g); //¦V¤U¼Y¸¨ 
+		g += 0.5f; //³vº¥¼W§Ö 
+		if(bird->getPosition().y>650){ //·í¾ã­Ó³¾¶W¥Xµe­±(y>650) 
+			_gameOver(); //©I¥s¹CÀ¸¥¢±Ñ¤§¨ç¼Æ 
 		}
 	}	
-	void gameAnime(){ //åŸ·è¡Œç²¾éˆç§»å‹•èˆ‡é³¥çš„è·³èºå’Œå‹•ç•« 
-		if(!gameover){ //é‚„æ²’çµæŸéŠæˆ²
-			birdAnime(); //å‘¼å«é³¥çš„å‹•ç•« 
-			birdMove(); //å‘¼å«é³¥çš„ä½ç§» 
-			pipeMove(); //å‘¼å«ç®¡é“çš„ä½ç§» 
+	void gameAnime(){ //°õ¦æºëÆF²¾°Ê»P³¾ªº¸õÅD©M°Êµe 
+		if(!gameover){ //ÁÙ¨Sµ²§ô¹CÀ¸
+			birdAnime(); //©I¥s³¾ªº°Êµe 
+			birdMove(); //©I¥s³¾ªº¦ì²¾ 
+			pipeMove(); //©I¥sºŞ¹Dªº¦ì²¾ 
 		}
 	}	
-	void run(){ //åŸ·è¡ŒéŠæˆ²ä¸»é«”ä¹‹Function 
-		while(!gameover){ //ç•¶è¦–çª—é‚„é–‹è‘—
-			events(); //å‘¼å«å‡½æ•¸eventsï¼Œç”¨æ–¼é—œé–‰è¦–çª—ï¼Œé‡æ–°é–‹å§‹éŠæˆ² 
-			gameAnime(); //å‘¼å«å‡½æ•¸gameï¼ŒåŸ·è¡Œç²¾éˆç§»å‹•èˆ‡é³¥çš„è·³èºå’Œå‹•ç•« 
-			draw(); //å‘¼å«å‡½æ•¸drawï¼Œåˆ·æ–°ç•«é¢ï¼Œæ¸²æŸ“ä¸¦é¡¯ç¤ºåœ–ç¤º
-			count++; //å¸¸æ•¸å¢åŠ ï¼Œç”¨æ–¼ç®¡é“ç”Ÿæˆ
+	void run(){ //°õ¦æ¹CÀ¸¥DÅé¤§Function 
+		while(!gameover){ //·íµøµ¡ÁÙ¶}µÛ
+			events(); //©I¥s¨ç¼Æevents¡A¥Î©óÃö³¬µøµ¡¡A­«·s¶}©l¹CÀ¸ 
+			gameAnime(); //©I¥s¨ç¼Ægame¡A°õ¦æºëÆF²¾°Ê»P³¾ªº¸õÅD©M°Êµe 
+			draw(); //©I¥s¨ç¼Ædraw¡A¨ê·sµe­±¡A´è¬V¨ÃÅã¥Ü¹Ï¥Ü
+			count++; //±`¼Æ¼W¥[¡A¥Î©óºŞ¹D¥Í¦¨
 			bgmCircle();
-			if( count == 300 ){ //å¸¸æ•¸ç­‰æ–¼300 
-				count = 0; //å¸¸æ•¸é‡è£½
-				 //å‘¼å«éŸ³æ¨‚é‡è¤‡æ’­æ”¾ 
+			if( count == 300 ){ //±`¼Æµ¥©ó300 
+				count = 0; //±`¼Æ­«»s
+				 //©I¥s­µ¼Ö­«½Æ¼½©ñ 
 			}
 		}
 	}
-	void reset_Bird(){ //é‡æ–°è¨­å®šéŠæˆ²ä¸­é³¥çš„ç²¾éˆ(åœ–åƒ) 
-		bird->setTexture(bd);  //ç²¾éˆåœ–æ¡ˆè¨­ç‚ºé³¥ 
-		bird->setPosition(500.f - bd.getSize().x / 2.f , 300.f-bd.getSize().y / 2.f); //è¨­å®šé³¥çš„åˆå§‹ä½ç½® 
-		bird->setScale(2.f, 2.f); //èª¿æ•´å¤§å°(æ¯”ä¾‹)
-		bird->setTextureRect(IntRect(0, 0, 34, 24)); //å–ç”¨åœ–ç‰‡ä¸­ï¼Œæœ€å·¦å´çš„é³¥ 
+	void reset_Bird(){ //­«·s³]©w¹CÀ¸¤¤³¾ªººëÆF(¹Ï¹³) 
+		bird->setTexture(bd);  //ºëÆF¹Ï®×³]¬°³¾ 
+		bird->setPosition(500.f - bd.getSize().x / 2.f , 300.f-bd.getSize().y / 2.f); //³]©w³¾ªºªì©l¦ì¸m 
+		bird->setScale(2.f, 2.f); //½Õ¾ã¤j¤p(¤ñ¨Ò)
+		bird->setTextureRect(IntRect(0, 0, 34, 24)); //¨ú¥Î¹Ï¤ù¤¤¡A³Ì¥ª°¼ªº³¾ 
 	}
-	void home_BirdAnime(){ //é¦–é ä¸­é³¥çš„å‹•ç•« 
-		frame += 0.15f; // è¨­å®šå¹€ 
-		if( frame > 3 ) // ç•¶å¤§æ–¼ä¸‰
-			frame -= 3; // è¨­ç‚º-3ï¼Œè£½é€ å¾ªç’°çš„æ„Ÿè¦º 
-		bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //è¨­å®šåœ–ç¤ºå–æ¨£ç¯„åœ
-		bird->move(0, g); //å‘ä¸‹å¢œè½ 
-		if(bird->getPosition().y>90) //é³¥å¿«æ’åˆ°PlayæŒ‰éˆ•ä¹‹å‰è¦åœä¸‹ä¾† 
-			g-=0.05f; //é€æ¼¸æ¸›é€Ÿï¼Œæœ€å¾Œä¸Šå‡ 
-		else if(bird->getPosition().y<50) //é³¥å¿«æ’åˆ°è¦–çª—é ‚éƒ¨ä¹‹å‰è¦åœä¸‹ä¾† 
-			g+=0.05f; //é€æ¼¸æ¸›é€Ÿï¼Œæœ€å¾Œä¸‹é™ 
+	void home_BirdAnime(){ //­º­¶¤¤³¾ªº°Êµe 
+		frame += 0.15f; // ³]©w´V 
+		if( frame > 3 ) // ·í¤j©ó¤T
+			frame -= 3; // ³]¬°-3¡A»s³y´`Àôªº·PÄ± 
+		bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //³]©w¹Ï¥Ü¨ú¼Ë½d³ò
+		bird->move(0, g); //¦V¤U¼Y¸¨ 
+		if(bird->getPosition().y>90) //³¾§Ö¼²¨ìPlay«ö¶s¤§«e­n°±¤U¨Ó 
+			g-=0.05f; //³vº¥´î³t¡A³Ì«á¤W¤É 
+		else if(bird->getPosition().y<50) //³¾§Ö¼²¨ìµøµ¡³»³¡¤§«e­n°±¤U¨Ó 
+			g+=0.05f; //³vº¥´î³t¡A³Ì«á¤U­° 
 	}
-	void bgmCircle(){ //éŸ³æ¨‚é‡è¤‡æ’­æ”¾ 
-		if(bgm_times>=1320){ //å¾ªç’°æ™‚æ©Ÿ 
-			bgm_times=0; //åˆå§‹åŒ–bgm_times 
-			sound_bgm.play(); //é‡æ–°æ’­æ”¾bgm 
+	void bgmCircle(){ //­µ¼Ö­«½Æ¼½©ñ 
+		if(bgm_times>=1320){ //´`Àô®É¾÷ 
+			bgm_times=0; //ªì©l¤Æbgm_times 
+			sound_bgm.play(); //­«·s¼½©ñbgm 
 		}else{
-			bgm_times++; //è¨˜æ•¸+1 
+			bgm_times++; //°O¼Æ+1 
 		}
 	}
-	bool isMouseOver(Sprite *sbtn){
-		mouse_x = Mouse::getPosition(*window).x; //å–å¾—æ»‘é¼ xåº§æ¨™ 
-		mouse_y = Mouse::getPosition(*window).y; //å–å¾—æ»‘é¼ yåº§æ¨™ 
-		btn_x = sbtn->getPosition().x; //å–å¾—æŒ‰éˆ•xåº§æ¨™ 
-		btn_y = sbtn->getPosition().y; //å–å¾—æŒ‰éˆ•yåº§æ¨™ 
-		btn_w = sbtn->getPosition().x + sbtn->getGlobalBounds().width; //å–å¾—æŒ‰éˆ•xç¯„åœ 
-		btn_h = sbtn->getPosition().y + sbtn->getGlobalBounds().height; //å–å¾—æŒ‰éˆ•yç¯„åœ 
-		if (mouse_x < btn_w && mouse_x > btn_x && mouse_y < btn_h && mouse_y > btn_y) //å¦‚æœæ»‘é¼ åœ¨æŒ‰éˆ•ç¯„åœä¹‹å…§ 
-			return true; //å›å‚³æ˜¯ 
-		return false; //ä¸åœ¨ç¯„åœå…§ å›å‚³å¦ 
-	}
-	void changeWindow(){
-		sound_bgm.play(); //bgméŸ³æ¨‚æ’­æ”¾
-		while( window->isOpen() ){ //ç•¶windowé–‹å•Ÿç‹€æ…‹ 
-			bgmCircle(); //å‘¼å«èƒŒæ™¯éŸ³æ¨‚å¾ªç’°å‡½æ•¸ 
-			window->clear(); //æ¸…ç©ºç•«é¢ï¼Œæ¸…é™¤ä¸Šä¸€å¹€çš„å…§å®¹ 
-			window->draw(*background); //é æ¸²æŸ“èƒŒæ™¯ 
-			switch(gamestatus){ //éŠæˆ²ç‹€æ…‹ä¹‹åˆ¤æ–·èˆ‡åŸ·è¡Œä¸åŒå‹•ä½œ 
-				case _homepage: //ç•¶åœ¨é¦–é æ™‚ 
-					while(window->pollEvent(event)){ //åµæ¸¬è¦–çª—äº‹ä»¶ 
-						if (event.type == sf::Event::Closed) //è¦–çª—è¢«æŒ‰ä¸‹é—œé–‰(x) 
-			                window->close(); //é—œé–‰è¦–çª— 
-						button_Start(); //PlayæŒ‰éˆ•ä¹‹æ»‘é¼ åœ¨ä¸Šæ–¹æ”¹è®Šåœ–ç¤ºèˆ‡æŒ‰éˆ•æŒ‰ä¸‹åˆ¤æ–· 
-						button_Rank();  //RankæŒ‰éˆ•ä¹‹æ»‘é¼ åœ¨ä¸Šæ–¹æ”¹è®Šåœ–ç¤ºèˆ‡æŒ‰éˆ•æŒ‰ä¸‹åˆ¤æ–·
-						button_Introduce(); //IntroduceæŒ‰éˆ•ä¹‹æ»‘é¼ åœ¨ä¸Šæ–¹æ”¹è®Šåœ–ç¤ºèˆ‡æŒ‰éˆ•æŒ‰ä¸‹åˆ¤æ–·
+	void changeWindow(){ //§ïÅÜµøµ¡¤§¨ç¼Æ 
+		sound_bgm.play(); //bgm­µ¼Ö¼½©ñ
+		while( window->isOpen() ){ //·íwindow¶}±Òª¬ºA 
+			bgmCircle(); //©I¥s­I´º­µ¼Ö´`Àô¨ç¼Æ 
+			window->clear(); //²MªÅµe­±¡A²M°£¤W¤@´Vªº¤º®e 
+			window->draw(*background); //¹w´è¬V­I´º 
+			switch(gamestatus){ //¹CÀ¸ª¬ºA¤§§PÂ_»P°õ¦æ¤£¦P°Ê§@ 
+				case _homepage: //·í¦b­º­¶®É 
+					while(window->pollEvent(event)){ //°»´úµøµ¡¨Æ¥ó 
+						if (event.type == sf::Event::Closed) //µøµ¡³Q«ö¤UÃö³¬(x) 
+			                window->close(); //Ãö³¬µøµ¡
+			            if(button_play->button_Mouse(*window)){//­Yplay«ö¶s³Q«ö¤U 
+							button_Play(); //°õ¦æPlay°Ê§@ 
+						}
+						if(button_rank->button_Mouse(*window)){//­Yrank«ö¶s³Q«ö¤U
+							button_Rank(); //°õ¦æRank°Ê§@
+						}
+						if(button_intro->button_Mouse(*window)){//­Yintro«ö¶s³Q«ö¤U
+							button_Introduce(); //°õ¦æIntroduce°Ê§@
+						}
 					}
-					home_BirdAnime(); //å‘¼å«é¦–é é³¥çš„å‹•ç•« 
-					window->draw(*sbtn_start); //é æ¸²æŸ“playæŒ‰éˆ• 
-					window->draw(*sbtn_showrank); //é æ¸²æŸ“rankæŒ‰éˆ• 
-					window->draw(*sbtn_introduce); //é æ¸²æŸ“introduceæŒ‰éˆ• 
-					window->draw(*bird); //é æ¸²æŸ“birdæŒ‰éˆ• 
-					window->display(); //åŸ·è¡Œæ¸²æŸ“ 
+					home_BirdAnime(); //©I¥s­º­¶³¾ªº°Êµe 
+					window->draw(*button_play->sbtn); //¹w´è¬Vplay«ö¶s 
+					window->draw(*button_rank->sbtn); //¹w´è¬Vrank«ö¶s 
+					window->draw(*button_intro->sbtn); //¹w´è¬Vintroduce«ö¶s 
+					window->draw(*bird); //¹w´è¬Vbird«ö¶s 
+					window->display(); //°õ¦æ´è¬V 
 					break;
 				case _inputname:
-					while(window->pollEvent(event)){ //åµæ¸¬è¦–çª—äº‹ä»¶ 
-						if(event.type == Event::Closed) //è¦–çª—è¢«æŒ‰ä¸‹é—œé–‰(x)
-			                window->close(); //é—œé–‰è¦–çª—
-			            if(event.type == Event::TextEntered){  //æ–‡å­—è¼¸å…¥åˆ¤å®š 
-			            	textbox1->typedOn(event); //å‘¼å«textboxåŸ·è¡Œ 
+					while(window->pollEvent(event)){ //°»´úµøµ¡¨Æ¥ó 
+						if(event.type == Event::Closed) //µøµ¡³Q«ö¤UÃö³¬(x)
+			                window->close(); //Ãö³¬µøµ¡
+			            if(event.type == Event::TextEntered){  //¤å¦r¿é¤J§P©w 
+			            	textbox1->typedOn(event); //©I¥stextbox°õ¦æ 
 						}
-						button_Enter();  //EnteræŒ‰éˆ•ä¹‹æ»‘é¼ åœ¨ä¸Šæ–¹æ”¹è®Šåœ–ç¤ºèˆ‡æŒ‰éˆ•æŒ‰ä¸‹åˆ¤æ–·
+						if(button_home->button_Mouse(*window)){ //­Yhome«ö¶s³Q«ö¤U
+							button_Homepage(); //°õ¦æHomepage°Ê§@
+						} 
+						if(button_enter->button_Mouse(*window)){ //­Yenter«ö¶s³Q«ö¤U
+							button_Enter(); //°õ¦æEnter°Ê§@
+						} 
 					}
-					window->draw(*sbtn_enter); //é æ¸²æŸ“enteræŒ‰éˆ• 
-					window->draw(text_announce); //é æ¸²æŸ“text announce 
-					textbox1->drawTo(*window); //é æ¸²æŸ“textbox1 
-					window->display(); //åŸ·è¡Œæ¸²æŸ“ 
+					window->draw(*button_home->sbtn); //¹w´è¬Vhome«ö¶s
+					window->draw(*button_enter->sbtn); //¹w´è¬Venter«ö¶s 
+					window->draw(text_announce); //¹w´è¬Vtext announce 
+					textbox1->drawTo(*window); //¹w´è¬Vtextbox1 
+					window->display(); //°õ¦æ´è¬V 
 					break;
 				case _game:
-					score = 0; //åˆå§‹åŒ–åˆ†æ•¸
-					bgm_times=0; //åˆå§‹åŒ–èƒŒæ™¯éŸ³æ¨‚å¾ªç’°æ™‚æ©Ÿ 
-					g =  frame = 0.f; //åˆå§‹åŒ–é‡é‡ã€å¹€(ç”¨æ–¼è¨­å®šé³¥çš„åœ–ç¤ºèˆ‡å‚¾è§’)
-					text_score.setString(to_string(score)); //åˆå§‹åŒ–åˆ†æ•¸æ–‡å­—å…§å®¹ 
-					pipes.clear(); //ç®¡é“å…¨éƒ¨æ¸…é™¤
-					bird->setPosition(500.f - bd.getSize().x / 2.f , 300.f-bd.getSize().y / 2.f); //åˆå§‹åŒ–é³¥çš„åº§æ¨™ 
-					gameover = false; //è¨­çµæŸçµæŸç‚ºå¦ 
-					reset_Bird();//é‡è¨­é³¥çš„åœ–ç‰‡ 
-					run(); //åŸ·è¡ŒéŠæˆ² 
+					score = 0; //ªì©l¤Æ¤À¼Æ
+					bgm_times=0; //ªì©l¤Æ­I´º­µ¼Ö´`Àô®É¾÷ 
+					g =  frame = 0.f; //ªì©l¤Æ­«¶q¡B´V(¥Î©ó³]©w³¾ªº¹Ï¥Ü»P¶É¨¤)
+					text_score.setString(to_string(score)); //ªì©l¤Æ¤À¼Æ¤å¦r¤º®e 
+					pipes.clear(); //ºŞ¹D¥ş³¡²M°£
+					bird->setPosition(500.f - bd.getSize().x / 2.f , 300.f-bd.getSize().y / 2.f); //ªì©l¤Æ³¾ªº®y¼Ğ 
+					gameover = false; //³]µ²§ôµ²§ô¬°§_ 
+					reset_Bird();//­«³]³¾ªº¹Ï¤ù 
+					run(); //°õ¦æ¹CÀ¸ 
 					break; 
 				case _gameover:
-					while(window->pollEvent(event)){ //åµæ¸¬è¦–çª—äº‹ä»¶  
-						if(event.type == sf::Event::Closed) //è¦–çª—è¢«æŒ‰ä¸‹é—œé–‰(x)
-			                window->close(); //é—œé–‰è¦–çª—
-						button_Restart(); //RestartæŒ‰éˆ•ä¹‹æ»‘é¼ åœ¨ä¸Šæ–¹æ”¹è®Šåœ–ç¤ºèˆ‡æŒ‰éˆ•æŒ‰ä¸‹åˆ¤æ–· 
-						button_Homepage(); //HomeæŒ‰éˆ•ä¹‹æ»‘é¼ åœ¨ä¸Šæ–¹æ”¹è®Šåœ–ç¤ºèˆ‡æŒ‰éˆ•æŒ‰ä¸‹åˆ¤æ–· 
+					while(window->pollEvent(event)){ //°»´úµøµ¡¨Æ¥ó  
+						if(event.type == sf::Event::Closed) //µøµ¡³Q«ö¤UÃö³¬(x)
+			                window->close(); //Ãö³¬µøµ¡
+			            if(button_restart->button_Mouse(*window)){ //­Yrestart«ö¶s³Q«ö¤U
+							button_Restart(); //°õ¦æRestart°Ê§@
+						}
+						if(button_home->button_Mouse(*window)){ //­Yhome«ö¶s³Q«ö¤U
+							button_Homepage(); //°õ¦æHomepage°Ê§@
+						} 
 					}	
-					for(auto &p:pipes){ //éæ­·æ‰€æœ‰ç®¡é“ 
-						window->draw(p); //å¾…åŸ·è¡Œé¡¯ç¤ºç®¡é“ 
+					for(auto &p:pipes){ //¹M¾ú©Ò¦³ºŞ¹D 
+						window->draw(p); //«İ°õ¦æÅã¥ÜºŞ¹D 
 					}
-					window->draw(*bird); //é æ¸²æŸ“é³¥
-					window->draw(text_score); //é æ¸²æŸ“åˆ†æ•¸ 
-					window->draw(*sbtn_homepage);  //é æ¸²æŸ“homeæŒ‰éˆ•
-					window->draw(*sbtn_restart); //é æ¸²æŸ“restartæŒ‰éˆ•
-					window->draw(text_rank); //é æ¸²æŸ“ç›®å‰æ’è¡Œèˆ‡æ­·å²æœ€é«˜ 
-					window->display(); //åŸ·è¡Œæ¸²æŸ“ 
+					window->draw(*bird); //¹w´è¬V³¾
+					window->draw(text_score); //¹w´è¬V¤À¼Æ 
+					window->draw(*button_restart->sbtn);  //¹w´è¬Vrestart«ö¶s
+					window->draw(*button_home->sbtn); //¹w´è¬Vhome«ö¶s
+					window->draw(text_rank); //¹w´è¬V¥Ø«e±Æ¦æ»P¾ú¥v³Ì°ª 
+					window->display(); //°õ¦æ´è¬V 
 					break;
 				case _showrank:
-					_showRank();//é¡¯ç¤ºæ’è¡Œä¹‹å‡½æ•¸ 
-					while(window->pollEvent(event)){ //åµæ¸¬è¦–çª—äº‹ä»¶  
-						if(event.type == sf::Event::Closed) //è¦–çª—è¢«æŒ‰ä¸‹é—œé–‰(x) 
-			                window->close(); //é—œé–‰è¦–çª— 
-						button_Homepage(); //HomeæŒ‰éˆ•ä¹‹æ»‘é¼ åœ¨ä¸Šæ–¹æ”¹è®Šåœ–ç¤ºèˆ‡æŒ‰éˆ•æŒ‰ä¸‹åˆ¤æ–·
+					_showRank();//Åã¥Ü±Æ¦æ¤§¨ç¼Æ 
+					while(window->pollEvent(event)){ //°»´úµøµ¡¨Æ¥ó  
+						if(event.type == sf::Event::Closed) //µøµ¡³Q«ö¤UÃö³¬(x) 
+			                window->close(); //Ãö³¬µøµ¡ 
+						if(button_home->button_Mouse(*window)){ //­Yhome«ö¶s³Q«ö¤U
+							button_Homepage(); //°õ¦æHomepage°Ê§@
+						}
 					}
-					window->draw(text_rank); //é æ¸²æŸ“æ’è¡Œæ¦œ 
-					window->draw(*sbtn_homepage); //é æ¸²æŸ“homeæŒ‰éˆ• 
-					window->display(); //åŸ·è¡Œæ¸²æŸ“ 
+					window->draw(text_rank); //¹w´è¬V±Æ¦æº] 
+					window->draw(*button_home->sbtn); //¹w´è¬Vhome«ö¶s 
+					window->display(); //°õ¦æ´è¬V 
 					break;
 				case _introduce:
-					while(window->pollEvent(event)){ //åµæ¸¬è¦–çª—äº‹ä»¶
-						if(event.type == sf::Event::Closed) //è¦–çª—è¢«æŒ‰ä¸‹é—œé–‰(x) 
-			                window->close();//é—œé–‰è¦–çª—
-						button_Homepage(); //HomeæŒ‰éˆ•ä¹‹æ»‘é¼ åœ¨ä¸Šæ–¹æ”¹è®Šåœ–ç¤ºèˆ‡æŒ‰éˆ•æŒ‰ä¸‹åˆ¤æ–·
+					while(window->pollEvent(event)){ //°»´úµøµ¡¨Æ¥ó
+						if(event.type == sf::Event::Closed) //µøµ¡³Q«ö¤UÃö³¬(x) 
+			                window->close();//Ãö³¬µøµ¡
+						if(button_home->button_Mouse(*window)){ //­Yhome«ö¶s³Q«ö¤U
+							button_Homepage(); //°õ¦æHomepage°Ê§@
+						}
 					}
-					window->draw(*sbtn_homepage); //é æ¸²æŸ“homeæŒ‰éˆ• 
-					window->draw(text_introduce);  //é æ¸²æŸ“ä»‹ç´¹ text 
-					window->display(); //åŸ·è¡Œæ¸²æŸ“
+					window->draw(*button_home->sbtn); //¹w´è¬Vhome«ö¶s 
+					window->draw(text_introduce);  //¹w´è¬V¤¶²Ğ text 
+					window->display(); //°õ¦æ´è¬V
 					break;
-				dafault: //default ç†è«–ä¸ŠéŠæˆ²ç‹€æ…‹æ²’æœ‰ä¾‹å¤– 
-					gamestatus = _homepage; //å¦‚æœç™¼ç”Ÿä¾‹å¤–ï¼Œè·³è‡³é¦–é  
+				dafault: //default ²z½×¤W¹CÀ¸ª¬ºA¨S¦³¨Ò¥~ 
+					gamestatus = _homepage; //¦pªGµo¥Í¨Ò¥~¡A¸õ¦Ü­º­¶ 
 					break;
 			}
 		}
 	}
-	void button_Start(){ //StartæŒ‰éˆ•ä¹‹æ”¹åœ–èˆ‡æŒ‰ä¸‹
-		if (isMouseOver(sbtn_start)){
-			sbtn_start->setTextureRect(IntRect(btn_start.getSize().x/2.f,0,btn_start.getSize().x/2.f,btn_start.getSize().y)); //æ”¹æˆæ»‘é¼ åœ¨ä¸Šåœ–ç‰‡ 
-			if (Mouse::isButtonPressed(Mouse::Left)){
-				gamestatus = _inputname;
-			}
-		}else{
-			sbtn_start->setTextureRect(IntRect(0,0,btn_start.getSize().x/2.f,btn_start.getSize().y));
-		}
+	
+	void button_Play(){ //Play«ö¶s«ö¤U¤§°Ê§@¨ç¼Æ
+		gamestatus = _inputname; //¶i¤J¿é¤J¦WºÙ 
 	}
-	void button_Rank(){ //RankæŒ‰éˆ•ä¹‹æ”¹åœ–èˆ‡æŒ‰ä¸‹ 
-		if (isMouseOver(sbtn_introduce)){
-			sbtn_introduce->setTextureRect(IntRect(btn_introduce.getSize().x/2.f,0,btn_introduce.getSize().x/2.f,btn_introduce.getSize().y)); //æ”¹æˆæ»‘é¼ åœ¨ä¸Šåœ–ç‰‡
-			if (Mouse::isButtonPressed(Mouse::Left)){
-				gamestatus = _introduce;
-			}
-		}else{
-			sbtn_introduce->setTextureRect(IntRect(0,0,btn_introduce.getSize().x/2.f,btn_introduce.getSize().y));
-		}
+	void button_Rank(){ //Rank«ö¶s«ö¤U¤§°Ê§@¨ç¼Æ 
+		gamestatus = _showrank; //¶i¤J±Æ¦æº] 
 	}
-	void button_Introduce(){ //IntroduceæŒ‰éˆ•ä¹‹æ”¹åœ–èˆ‡æŒ‰ä¸‹
-		if (isMouseOver(sbtn_showrank)){
-			sbtn_showrank->setTextureRect(IntRect(btn_showrank.getSize().x/2.f,0,btn_showrank.getSize().x/2.f,btn_showrank.getSize().y)); //æ”¹æˆæ»‘é¼ åœ¨ä¸Šåœ–ç‰‡ 
-			if (Mouse::isButtonPressed(Mouse::Left)){
-				gamestatus = _showrank;
-			}
-		}else{
-			sbtn_showrank->setTextureRect(IntRect(0,0,btn_showrank.getSize().x/2.f,btn_showrank.getSize().y));
-		}
+	void button_Introduce(){ //Introduce«ö¶s«ö¤U¤§°Ê§@¨ç¼Æ
+		gamestatus = _introduce; //¶i¤J¤¶²Ğ 
 	}
-	void button_Enter(){ //EnteræŒ‰éˆ•ä¹‹æ”¹åœ–èˆ‡æŒ‰ä¸‹ 
-		show_name="";
-		if(isMouseOver(sbtn_enter)){
-			sbtn_enter->setTextureRect(IntRect(btn_enter.getSize().x/2.f,0,btn_enter.getSize().x/2.f,btn_enter.getSize().y)); //æ”¹æˆæ»‘é¼ åœ¨ä¸Šåœ–ç‰‡ 
-			if (Mouse::isButtonPressed(Mouse::Left)){
-				name=textbox1->getText();	
-				for(char &c:name){
-					show_name+=c;
-				}
-				gamestatus = _game;
-				sound_bgm.play();
-			}
-		}else{
-			sbtn_enter->setTextureRect(IntRect(0,0,btn_enter.getSize().x/2.f,btn_enter.getSize().y));
-		}
+	void button_Enter(){ //Enter«ö¶s«ö¤U¤§°Ê§@¨ç¼Æ
+		name=textbox1->getText();//name³]©w¬°textbox1¤§¤º®e	
+		sound_bgm.play(); //bgm¼½©ñ 
+		gamestatus = _game; //¶i¤J¹CÀ¸ 
 	}
-	void button_Restart(){ //RestartæŒ‰éˆ•ä¹‹æ”¹åœ–èˆ‡æŒ‰ä¸‹
-		if(isMouseOver(sbtn_restart)){
-			sbtn_restart->setTextureRect(IntRect(btn_restart.getSize().x/2.f,0,btn_restart.getSize().x/2.f,btn_restart.getSize().y)); //æ”¹æˆæ»‘é¼ åœ¨ä¸Šåœ–ç‰‡
-			if (Mouse::isButtonPressed(Mouse::Left)){
-				gamestatus = _game;
-			}
-		}else{
-			sbtn_restart->setTextureRect(IntRect(0,0,btn_restart.getSize().x/2.f,btn_restart.getSize().y));
-		}	
+	void button_Restart(){ //Restart«ö¶s«ö¤U¤§°Ê§@¨ç¼Æ
+		sound_bgm.play(); //bgm¼½©ñ
+		gamestatus = _game; //¶i¤J¹CÀ¸ 
 	}
-	void button_Homepage(){ //HomepageæŒ‰éˆ•ä¹‹æ”¹åœ–èˆ‡æŒ‰ä¸‹
-		if(isMouseOver(sbtn_homepage)){
-			sbtn_homepage->setTextureRect(IntRect(btn_homepage.getSize().x/2.f,0,btn_homepage.getSize().x/2.f,btn_homepage.getSize().y)); //æ”¹æˆæ»‘é¼ åœ¨ä¸Šåœ–ç‰‡ 
-			if (Mouse::isButtonPressed(Mouse::Left)){
-				sound_bgm.play();
-				bgm_times=0;
-				gamestatus = _homepage;
-				g =  frame = 0.f;
-				setPictureSize(bird,&bd,2.5f,3,500,75);
-				bird->setRotation(0);
-			}
-		}else{
-			sbtn_homepage->setTextureRect(IntRect(0,0,btn_homepage.getSize().x/2.f,btn_homepage.getSize().y));
-		}
+	void button_Homepage(){ //Homepage«ö¶s«ö¤U¤§°Ê§@¨ç¼Æ 
+		sound_bgm.play(); //bgm¼½©ñ
+		bgm_times=0; //­«»sbgm°j°é®É¾÷ 
+		gamestatus = _homepage; //¶i¤J­º­¶ 
+		g =  frame = 0.f; //¹w³]­º­¶³¾¦V¤U¡B´V(¥Î©ó³]©w³¾ªº¹Ï¥Ü»P¶É¨¤) 
+		setPictureSize(bird,&bd,2.5f,3,500,75); //³]©w³¾ªº¹Ï¤ù¡B¤j¤p»P¦ì¸m 
+		bird->setRotation(0); //³]©w³¾ªºÂà¨¤ 
 	}
 	public:
-	FlappyBird(){ //å»ºæ§‹å…ƒ(å­)ï¼Œè¨­å®šåˆå§‹å€¼ 
-	  setSFML(); //ç”±æ–¼SFMLå¥—ä»¶çš„ç‰©ä»¶è¨­å®šä¸å¯åœ¨å»ºæ§‹å­åŸ·è¡Œï¼Œæ‰€ä»¥å¦å¤–å‘¼å«å‡½æ•¸ 
+	FlappyBird(){ //«Øºc¤¸(¤l)¡A³]©wªì©l­È 
+	  setSFML(); //¥Ñ©óSFML®M¥óªºª«¥ó³]©w¤£¥i¦b«Øºc¤l°õ¦æ¡A©Ò¥H¥t¥~©I¥s¨ç¼Æ 
 	}
 };
