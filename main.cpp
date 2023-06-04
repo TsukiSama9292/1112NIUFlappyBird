@@ -2,9 +2,8 @@
 using namespace std;
 int main(){
   srand(time(NULL));
-  auto *flappybird = new FlappyBird();
-  flappybird->flappy_start();
-  delete(flappybird);
+  auto *flappybird = new FlappyBird(); //建立flappy物件，即執行遊戲 
+  delete(flappybird);//刪除物件 
   return 0;
 }
 
