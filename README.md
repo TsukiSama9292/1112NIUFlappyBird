@@ -1,5 +1,9 @@
 # 1112NIUFlappyBird
 宜蘭大學 資工一 111_2 程式設計 期末專案 第五組 FlappyBird  
+開發工具為Dev C++ GCC 4.9.2  
+所以要用SFML 2.4.2的版本  
+文法有用到C++11  
+請在Dev C++的編譯器選項(一般) 呼叫編譯器執行(打勾) 並打上-std=c++11  
 參考資料:  
 [SFML Dev C++ 教學網站](https://programming727.pixnet.net/blog/post/24516428)  
 [SFML 使用技巧1](https://www.twblogs.net/a/5e5021e8bd9eee101e86c2e8)  
