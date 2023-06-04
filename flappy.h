@@ -55,7 +55,7 @@ class FlappyBird : protected setrank{
 				break;//跳出for迴圈 
 		}
 		text_rank.setString(showrank);//設定文字 
-		text_rank.setPosition(500-text_rank.getGlobalBounds().width/2.f,300-text_rank.getGlobalBounds().height/2.f);//設定位置 
+		text_rank.setPosition(500-text_rank.getGlobalBounds().width/2.f,250-text_rank.getGlobalBounds().height/2.f);//設定位置 
 	}
 	void _gameOver(){ //遊戲結束之音效、狀態、當前名次顯示與歷史分數之顯示 
 		sound_hit.play(); //播放撞擊音效
