@@ -1,4 +1,4 @@
-# 1112NIUFlappyBird
+# 111_2-NO.5-TEAM-Flappy-bird
 宜蘭大學 資工一 111_2 程式設計 期末專案 第五組 FlappyBird  
 開發工具為Dev C++ GCC 4.9.2  
 所以要用SFML 2.4.2的GCC版本  
