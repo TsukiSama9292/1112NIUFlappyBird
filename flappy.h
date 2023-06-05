@@ -31,14 +31,14 @@ class FlappyBird : protected setrank{
 	float mouse_x,mouse_y,btn_x,btn_y,btn_w,btn_h;	
 	RenderWindow *window;
 	float g,frame,interval;
-	int count,bgm_times,now_rank;
+	int count,bgm_timing,now_rank,rankfield,arrow_timing;
 	string name,showrank,str;
 	long long score,history_high;
 	pair<int,long long> now;
 	SoundBuffer buffer_hit,buffer_wing,buffer_add,buffer_bgm,buffer_no1;
 	Sound sound_hit,sound_wing,sound_add,sound_bgm,sound_no1;
 	Font font;
-	Text text_score,text_rank,text_introduce,text_announce;
+	Text text_score,text_rank,text_introduce,text_announce,arrow_up,arrow_down;
 	Texture bg, bd, pipe;
 	Sprite *background, *bird, *pipeBottom, *pipeTop;
 	vector<Sprite> pipes;
@@ -50,9 +50,9 @@ class FlappyBird : protected setrank{
 		showrank="";//顯示之文字 
 		if(v.size()==0)//rank.txt無資料 
 			showrank="No Data";//顯示No Data 
-		for(int i=0;i<v.size();i++){//遍歷vector v  
+		for(int i=rankfield;i<v.size();i++){//遍歷vector v  
 			showrank+="NO."+to_string(i+1)+" "+v[i].first+" Score:"+to_string(v[i].second)+"\n";//顯示格式 
-			if(i==6)//7人時停下 
+			if(i==rankfield+6)//7人時停下 
 				break;//跳出for迴圈 
 		}
 		text_rank.setString(showrank);//設定文字 
@@ -69,7 +69,7 @@ class FlappyBird : protected setrank{
 		text_rank.setPosition(500-text_rank.getGlobalBounds().width/2.f,187.5f);//設定位置 
 		if(now_rank==1&&score==history_high){//如果目前是第一名且分數是最高紀錄，暫停背景音樂，播放勝利音效 
 			sound_bgm.stop();//暫停背景音樂 
-			bgm_times=1000;//設定背景音樂時間，用於下次循環 
+			bgm_timing=1000;//設定背景音樂時間，用於下次循環 
 			sound_no1.play();//播放勝利音樂 
 		}		
 	}
@@ -79,9 +79,10 @@ class FlappyBird : protected setrank{
 		g = frame = 0.f;; //預設首頁鳥向下、幀(用於設定鳥的圖示與傾角) 
 		interval = 240.f; //設定管道區間 
 		count = 0; //常數-用於生成管道
-		bgm_times = 0; //設定背景音樂播放之正記數 
+		bgm_timing = 0; //設定背景音樂播放之正記數 
 		gameover = addscore = false;  //結束、加分為否 
-		score = 0;  //分數為0 
+		score = 0;  //分數為0
+		rankfield=0;
 		//視窗設定 
 		window = new RenderWindow(VideoMode(1000, 600),TEAMNAME); //視窗設定 
 		window->setPosition(Vector2i(0, 0)); //初始化視窗座標左上角(0,0) 
@@ -126,9 +127,12 @@ class FlappyBird : protected setrank{
 		setTextSFML(&text_rank,10.f,250.f,50,str);
 		str="This Flappy Bird game is created by B1143007 Lee Min-Chen, B114\n3009 Wu Bing-Rong, B1143015 Lin Xuan-You, B1143021 Lin Cheng-Wei\n, B1143027 ChenBo-Hao, and B1143036 Huang Qi-Ting, is a simple \nbut addictive game. Guide the bird through pipes by tapping the \nscreen or pressing spacebar. Avoid collisions with pipes and \nthe ground. Score points for each successful passage. \nChallenge yourself with increasing difficulty. Aim for the \nhighest score and compete with friends.";
 		setTextSFML(&text_introduce,10.f,100.f,30,str);
-		str="Name : \nWarning  :Don't using space in the \nfirst char";
+		str="Name : \nWarning : Only supports input of English, numbers and some symbols";
 		setTextSFML(&text_announce,100.f,100.f,40,str);
-
+		str="^";
+		setTextSFML(&arrow_up,80.f,350.f,40,str);
+		setTextSFML(&arrow_down,80.f,425.f,40,str);
+		arrow_down.setScale(1.0f, -1.0f);
 		
 		/*以下是音效設定*/
 		if(!buffer_hit.loadFromFile(SOUND_HIT)) //載入音效_hit 
@@ -285,11 +289,11 @@ class FlappyBird : protected setrank{
 			g+=0.05f; //逐漸減速，最後下降 
 	}
 	void bgmCircle(){ //音樂重複播放 
-		if(bgm_times>=1320){ //循環時機 
-			bgm_times=0; //初始化bgm_times 
+		if(bgm_timing>=1320){ //循環時機 
+			bgm_timing=0; //初始化bgm_timing 
 			sound_bgm.play(); //重新播放bgm 
 		}else{
-			bgm_times++; //記數+1 
+			bgm_timing++; //記數+1 
 		}
 	}
 	void changeWindow(){ //改變視窗之函數 
@@ -342,7 +346,7 @@ class FlappyBird : protected setrank{
 					break;
 				case _game:
 					score = 0; //初始化分數
-					bgm_times=0; //初始化背景音樂循環時機 
+					bgm_timing=0; //初始化背景音樂循環時機 
 					g =  frame = 0.f; //初始化重量、幀(用於設定鳥的圖示與傾角)
 					text_score.setString(to_string(score)); //初始化分數文字內容 
 					pipes.clear(); //管道全部清除
@@ -376,11 +380,32 @@ class FlappyBird : protected setrank{
 					_showRank();//顯示排行之函數 
 					while(window->pollEvent(event)){ //偵測視窗事件  
 						if(event.type == sf::Event::Closed) //視窗被按下關閉(x) 
-			                window->close(); //關閉視窗 
+			                window->close(); //關閉視窗
+			            if(Keyboard::isKeyPressed(Keyboard::Up)){
+			            	arrow_timing=0;
+			            	arrow_up.setColor(Color::Red);
+							if(rankfield>0)
+								rankfield--;
+						}
+			            if(Keyboard::isKeyPressed(Keyboard::Down)){
+			            	arrow_timing=0;
+			            	arrow_down.setColor(Color::Red);
+							if(rankfield<v.size()-1)
+								rankfield++;
+						}
 						if(button_home->button_Mouse(*window)){ //若home按鈕被按下
 							button_Homepage(); //執行Homepage動作
 						}
 					}
+					
+					if(arrow_timing>=10){
+						arrow_up.setColor(Color::White);
+						arrow_down.setColor(Color::White);
+					}else{
+						arrow_timing++;
+					}
+					window->draw(arrow_up);
+					window->draw(arrow_down);
 					window->draw(text_rank); //預渲染排行榜 
 					window->draw(*button_home->sbtn); //預渲染home按鈕 
 					window->display(); //執行渲染 
@@ -413,6 +438,7 @@ class FlappyBird : protected setrank{
 	void button_Introduce(){ //Introduce按鈕按下之動作函數
 		gamestatus = _introduce; //進入介紹 
 	}
+	
 	void button_Enter(){ //Enter按鈕按下之動作函數
 		name=textbox1->getText();//name設定為textbox1之內容	
 		sound_bgm.play(); //bgm播放 
@@ -424,7 +450,7 @@ class FlappyBird : protected setrank{
 	}
 	void button_Homepage(){ //Homepage按鈕按下之動作函數 
 		sound_bgm.play(); //bgm播放
-		bgm_times=0; //重製bgm迴圈時機 
+		bgm_timing=0; //重製bgm迴圈時機 
 		gamestatus = _homepage; //進入首頁 
 		g =  frame = 0.f; //預設首頁鳥向下、幀(用於設定鳥的圖示與傾角) 
 		setPictureSize(bird,&bd,2.5f,3,500,75); //設定鳥的圖片、大小與位置 
