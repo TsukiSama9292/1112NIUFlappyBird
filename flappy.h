@@ -14,6 +14,7 @@
 #define BACKGROUND "./AllSundries/image/background.png"
 #define BIRD "./AllSundries/image/bird.png"
 #define PIPE "./AllSundries/image/pipe.png"
+#define TEAM_PICTURE "./AllSundries/image/team.png"
 #define FONT "./AllSundries/font/flappybird.ttf"
 #define BUTTON_Play "./AllSundries/button/play.png"
 #define BUTTON_ENTER "./AllSundries/button/enter.png"
@@ -31,7 +32,7 @@ class FlappyBird : protected setrank{
 	float mouse_x,mouse_y,btn_x,btn_y,btn_w,btn_h;	
 	RenderWindow *window;
 	float g,frame,interval;
-	int count,bgm_timing,now_rank,rankfield,arrow_timing,rank_now,score_now,rank_last,score_last;
+	int count,bgm_timing,now_rank,rankfield,any_timing,rank_now,score_now,rank_last,score_last;
 	string name,showrank,str;
 	long long score,history_high;
 	pair<int,long long> now;
@@ -39,10 +40,10 @@ class FlappyBird : protected setrank{
 	Sound sound_hit,sound_wing,sound_add,sound_bgm,sound_no1;
 	Font font;
 	Text text_score,text_rank,text_introduce,text_announce,arrow_up,arrow_down,ann_space;
-	Texture bg, bd, pipe;
-	Sprite *background, *bird, *pipeBottom, *pipeTop;
+	Texture bg, bd, pipe,team;
+	Sprite *background, *bird, *pipeBottom, *pipeTop,*team_picture;
 	vector<Sprite> pipes;
-	bool gameover, addscore;
+	bool gameover, addscore,space_up;
 	Status gamestatus = _homepage;
 	Textbox *textbox1;
 	Button *button_play,*button_enter,*button_restart,*button_home,*button_rank,*button_intro;
@@ -76,6 +77,7 @@ class FlappyBird : protected setrank{
 	}
 	void setSFML(){ //用於設定初始值
 		//參數設定 
+		space_up=true;
 		name=""; //清空name
 		g = frame = 0.f;; //預設首頁鳥向下、幀(用於設定鳥的圖示與傾角) 
 		interval = 240.f; //設定管道區間 
@@ -105,7 +107,13 @@ class FlappyBird : protected setrank{
 			cout<<"Fail loading bird.png"<<endl;  
 		bird = new Sprite(); //建立精靈 
 		setPictureSize(bird,&bd,2.5f,3,500,75);
-		
+		/*團隊照片*/
+		if(!team.loadFromFile(TEAM_PICTURE))
+			cout<<"Fail loading team_picture"<<endl;
+		team_picture=new Sprite();
+		team_picture->setTexture(team);
+		team_picture->setScale(0.24,0.24);
+		team_picture->setPosition(500-team_picture->getGlobalBounds().width/2.f,350-team_picture->getGlobalBounds().height/2.f);
 		/*以下是管道的圖與精靈設定*/
 		if(!pipe.loadFromFile(PIPE))//載入圖片 
 			cout<<"Fail loading pipe.png"<<endl;
@@ -127,8 +135,8 @@ class FlappyBird : protected setrank{
 		str="";
 		setTextSFML(&text_rank,10.f,250.f,50,str);
 		str="This Flappy Bird game is created by B1143007 Lee Min-Chen, B114\n3009 Wu Bing-Rong, B1143015 Lin Xuan-You, B1143021 Lin Cheng-Wei\n, B1143027 ChenBo-Hao, and B1143036 Huang Qi-Ting, is a simple \nbut addictive game. Guide the bird through pipes by tapping the \nscreen or pressing spacebar. Avoid collisions with pipes and \nthe ground. Score points for each successful passage. \nChallenge yourself with increasing difficulty. Aim for the \nhighest score and compete with friends.";
-		setTextSFML(&text_introduce,10.f,100.f,30,str);
-		str="Name : \nWarning : Only supports input of English, numbers and some symbols";
+		setTextSFML(&text_introduce,10.f,10.f,30,str);
+		str="Name : \nWarning : Only supports input of English,\nnumbers and some symbols";
 		setTextSFML(&text_announce,100.f,100.f,40,str);
 		str="^";
 		setTextSFML(&arrow_up,80.f,350.f,40,str);
@@ -204,21 +212,6 @@ class FlappyBird : protected setrank{
 		window->display(); //呼叫OpenGL渲染完成後調用(對當前幀的所有待顯示圖像顯示在畫面上) 
 	}
 	void pipeMove(){ //用於移動水管，與鳥的跳躍 
-		if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25){ //高度25禁止往上
-			arrow_timing =0;
-			ann_space.setColor(Color::Red);
-			sound_wing.play(); //播放揮翅膀音效 
-			bird->setRotation(-frame*2 - 10.f); //旋轉稍微向上看 
-			g = -8.f; //設定重量向下 
-		}
-		else
-			bird->setRotation(frame*2 - 10.f); //旋轉稍微向下看
-		if(arrow_timing>=10){
-			ann_space.setColor(Color::White);
-		}else{
-			arrow_timing++;
-		}
-		
 		if( count % 150 == 0 ){ //每執行150次時 
 			int pos = rand() % 315 + 25; //設定隨機高度 
 			pipeTop->setPosition(1000, pos);  //上管道設定位置
@@ -255,7 +248,21 @@ class FlappyBird : protected setrank{
 		}	
 		bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //設定圖示取樣範圍 
 	}	
-	void birdMove(){ //移動鳥 
+	void birdMove(){ //移動鳥
+		if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25&&space_up){ //高度25禁止往上
+			any_timing =0;//從0數要轉白的時機 
+			ann_space.setColor(Color::Red);//讓Space轉紅 
+			sound_wing.play(); //播放揮翅膀音效 
+			bird->setRotation(-frame*2 - 10.f); //旋轉稍微向上看 
+			g = -8.f; //設定重量向下 
+		}
+		else
+			bird->setRotation(frame*2 - 10.f); //旋轉稍微向下看
+		if(any_timing>=10){
+			ann_space.setColor(Color::White); //讓Space轉白 
+		}else{
+			any_timing++;//轉白前的倒數 
+		}
 		bird->move(0, g); //向下墜落 
 		g += 0.5f; //逐漸增快 
 		if(bird->getPosition().y>650){ //當整個鳥超出畫面(y>650) 
@@ -393,13 +400,13 @@ class FlappyBird : protected setrank{
 						if(event.type == sf::Event::Closed) //視窗被按下關閉(x) 
 			                window->close(); //關閉視窗
 			            if(Keyboard::isKeyPressed(Keyboard::Up)){
-			            	arrow_timing=0;
+			            	any_timing=0;
 			            	arrow_up.setColor(Color::Red);
 							if(rankfield>0)
 								rankfield--;
 						}
 			            if(Keyboard::isKeyPressed(Keyboard::Down)){
-			            	arrow_timing=0;
+			            	any_timing=0;
 			            	arrow_down.setColor(Color::Red);
 							if(rankfield<v.size()-1)
 								rankfield++;
@@ -409,11 +416,11 @@ class FlappyBird : protected setrank{
 						}
 					}
 					
-					if(arrow_timing>=10){
+					if(any_timing>=10){
 						arrow_up.setColor(Color::White);
 						arrow_down.setColor(Color::White);
 					}else{
-						arrow_timing++;
+						any_timing++;
 					}
 					window->draw(arrow_up);
 					window->draw(arrow_down);
@@ -429,6 +436,7 @@ class FlappyBird : protected setrank{
 							button_Homepage(); //執行Homepage動作
 						}
 					}
+					window->draw(*team_picture);
 					window->draw(*button_home->sbtn); //預渲染home按鈕 
 					window->draw(text_introduce);  //預渲染介紹 text 
 					window->display(); //執行渲染
