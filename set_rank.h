@@ -100,10 +100,12 @@ class setrank
 	{
 	    //取得名次
 	    int idx=-1;
+	    long long highscore;
 	    for(int i=0;i<v.size();i++)
 	    {
 	        if(v[i].first==p.first)
 	        {
+	        	highscore=max(v[i].second,p.second);
 	            idx=i;
 	            break;
 	        }
@@ -111,6 +113,7 @@ class setrank
 	    if(idx==-1)
 	    {
 	        v.push_back(p);
+	        highscore=p.second;
 	    }
 	    else
 	    {
@@ -126,7 +129,7 @@ class setrank
 	    idx=-1;
 	    for(int i=0;i<v.size();i++)
 	    {
-	        if(v[i].first==p.first)
+	        if(v[i].second==highscore)
 	        {
 	            idx=i;
 	            break;

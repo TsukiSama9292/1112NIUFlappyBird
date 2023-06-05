@@ -31,14 +31,14 @@ class FlappyBird : protected setrank{
 	float mouse_x,mouse_y,btn_x,btn_y,btn_w,btn_h;	
 	RenderWindow *window;
 	float g,frame,interval;
-	int count,bgm_timing,now_rank,rankfield,arrow_timing;
+	int count,bgm_timing,now_rank,rankfield,arrow_timing,rank_now,score_now,rank_last,score_last;
 	string name,showrank,str;
 	long long score,history_high;
 	pair<int,long long> now;
 	SoundBuffer buffer_hit,buffer_wing,buffer_add,buffer_bgm,buffer_no1;
 	Sound sound_hit,sound_wing,sound_add,sound_bgm,sound_no1;
 	Font font;
-	Text text_score,text_rank,text_introduce,text_announce,arrow_up,arrow_down;
+	Text text_score,text_rank,text_introduce,text_announce,arrow_up,arrow_down,ann_space;
 	Texture bg, bd, pipe;
 	Sprite *background, *bird, *pipeBottom, *pipeTop;
 	vector<Sprite> pipes;
@@ -50,8 +50,9 @@ class FlappyBird : protected setrank{
 		showrank="";//顯示之文字 
 		if(v.size()==0)//rank.txt無資料 
 			showrank="No Data";//顯示No Data 
-		for(int i=rankfield;i<v.size();i++){//遍歷vector v  
-			showrank+="NO."+to_string(i+1)+" "+v[i].first+" Score:"+to_string(v[i].second)+"\n";//顯示格式 
+		for(int i=rankfield;i<v.size();i++){//遍歷vector v	
+			//showrank+="NO."+to_string(i+1)+" "+v[i].first+" Score:"+to_string(v[i].second)+"\n";//顯示格式 
+			showrank+="NO."+to_string(renewrank(v[i]).first)+" "+v[i].first+" Score:"+to_string(v[i].second)+"\n";//顯示格式
 			if(i==rankfield+6)//7人時停下 
 				break;//跳出for迴圈 
 		}
@@ -62,10 +63,10 @@ class FlappyBird : protected setrank{
 		sound_hit.play(); //播放撞擊音效
 		gameover = true; //遊戲結束 
 		gamestatus=_gameover; //狀態設定 
+		//history_high=0;//renewrank({name,0}).second;//歷史最高紀錄 
 		now = renewrank({name,score}); //重製分數排行 
-		now_rank=now.first; //目前的分數 
-		history_high=now.second; //歷史最高紀錄 
-		text_rank.setString("NO."+to_string(now_rank)+" "+name+" Score:"+to_string(score)+" History:"+to_string(history_high)); //顯示格式 
+		now_rank=now.first; //目前的排行  
+		text_rank.setString("NO."+to_string(now_rank)+" "+name+" Score:"+to_string(score)+" History:"+to_string(now.second)); //顯示格式 
 		text_rank.setPosition(500-text_rank.getGlobalBounds().width/2.f,187.5f);//設定位置 
 		if(now_rank==1&&score==history_high){//如果目前是第一名且分數是最高紀錄，暫停背景音樂，播放勝利音效 
 			sound_bgm.stop();//暫停背景音樂 
@@ -133,7 +134,8 @@ class FlappyBird : protected setrank{
 		setTextSFML(&arrow_up,80.f,350.f,40,str);
 		setTextSFML(&arrow_down,80.f,425.f,40,str);
 		arrow_down.setScale(1.0f, -1.0f);
-		
+		str="SPACE";
+		setTextSFML(&ann_space,10.f,550.f,40,str);
 		/*以下是音效設定*/
 		if(!buffer_hit.loadFromFile(SOUND_HIT)) //載入音效_hit 
 			cout<<"Fail loading hit.wav"<<endl; //載入失敗_hit 
@@ -153,7 +155,7 @@ class FlappyBird : protected setrank{
 				
 		textbox1->setFont(font); //設定字體 
 		textbox1->setPosition({240,100});  //textbox位置 
-		textbox1->setLimit(true,20);  //設定是否設限and字數限制
+		textbox1->setLimit(true,15);  //設定是否設限and字數限制
 		/*Button類別物件之測試*/
 		str=BUTTON_Play; //str設為按鈕圖片位置 
 		button_play=new Button(str,0.4f,500.f,250.f); //按鈕play物件設定(紋理、精靈、大小、位置) 
@@ -197,17 +199,26 @@ class FlappyBird : protected setrank{
 			window->draw(p); //待執行顯示管道 
 		}
 		window->draw(*bird); //待執行顯示鳥 
-		window->draw(text_score); //待執行顯示分數 
+		window->draw(text_score); //待執行顯示分數
+		window->draw(ann_space); 
 		window->display(); //呼叫OpenGL渲染完成後調用(對當前幀的所有待顯示圖像顯示在畫面上) 
 	}
 	void pipeMove(){ //用於移動水管，與鳥的跳躍 
 		if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25){ //高度25禁止往上
+			arrow_timing =0;
+			ann_space.setColor(Color::Red);
 			sound_wing.play(); //播放揮翅膀音效 
 			bird->setRotation(-frame*2 - 10.f); //旋轉稍微向上看 
 			g = -8.f; //設定重量向下 
 		}
 		else
 			bird->setRotation(frame*2 - 10.f); //旋轉稍微向下看
+		if(arrow_timing>=10){
+			ann_space.setColor(Color::White);
+		}else{
+			arrow_timing++;
+		}
+		
 		if( count % 150 == 0 ){ //每執行150次時 
 			int pos = rand() % 315 + 25; //設定隨機高度 
 			pipeTop->setPosition(1000, pos);  //上管道設定位置
