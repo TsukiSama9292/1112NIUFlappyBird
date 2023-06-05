@@ -4,8 +4,8 @@
 所以要用SFML 2.4.2的GCC版本  
 文法有用到C++11  
 請在Dev C++的編譯器選項(一般) 呼叫編譯器執行(打勾) 並打上-std=c++11  
-C:\SFML-2.4.2\include\SFML\Graphics\Text.hpp 第177行改成
-改成/*SFML_DEPRECATED*/ void setColor(const Color& color);
+C:\SFML-2.4.2\include\SFML\Graphics\Text.hpp 第177行改成  
+改成/*SFML_DEPRECATED*/ void setColor(const Color& color);  
 這樣可以讓設定Text文字時Dev C++ 不會有警告
 參考資料:  
 [SFML Dev C++ 教學網站](https://programming727.pixnet.net/blog/post/24516428)  
