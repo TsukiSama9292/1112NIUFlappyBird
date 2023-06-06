@@ -57,7 +57,6 @@
 					if(hasLimit){
 						if(text.str().length()<=limit){
 							inputLogic(charTyped);
-							std::cout<<text.str().length();
 						}
 						else if(text.str().length() > limit && charTyped == DELETE_KEY){
 							deleteLastChar();
