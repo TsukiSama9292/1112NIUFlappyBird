@@ -26,33 +26,32 @@
 using namespace std;
 using namespace sf;
 enum Status{_homepage, _inputname, _game, _gameover, _showrank, _introduce};//遊戲狀態之enum 
-class FlappyBird : protected setrank{
+class FlappyBird : private setrank{ //FlappyBird繼承setrank
 	private:
-	Event event;
-	float mouse_x,mouse_y,btn_x,btn_y,btn_w,btn_h;	
-	RenderWindow *window;
-	float g,frame,interval;
-	int count,bgm_timing,now_rank,rankfield,any_timing,rank_now,score_now,rank_last,score_last;
-	string name,showrank,str;
-	long long score,history_high;
-	pair<int,long long> now;
-	SoundBuffer buffer_hit,buffer_wing,buffer_add,buffer_bgm,buffer_no1;
-	Sound sound_hit,sound_wing,sound_add,sound_bgm,sound_no1;
-	Font font;
-	Text text_score,text_rank,text_introduce,text_announce,arrow_up,arrow_down,ann_space;
-	Texture bg, bd, pipe,team;
-	Sprite *background, *bird, *pipeBottom, *pipeTop,*team_picture;
-	vector<Sprite> pipes;
-	bool gameover, addscore,space_up;
-	Status gamestatus = _homepage;
-	Textbox *textbox1;
-	Button *button_play,*button_enter,*button_restart,*button_home,*button_rank,*button_intro;
+	Event event;//宣告sf::事件 event 
+	float mouse_x,mouse_y,btn_x,btn_y,btn_w,btn_h;//宣告滑鼠x,y位置	按鈕x,y位置 按鈕寬,高 
+	RenderWindow *window; //宣告sf::RenderWindow 指標變數 (動態記憶體) 
+	float g,frame,interval; //宣告重力、幀(用於動畫)、間隔(管道的間隔) 
+	int count,bgm_timing,rankfield,any_timing,now_rank;//常數(水管生成時機)、BGM時機(循環播放)、排行範圍(顯示的範圍)、其他時機(用於箭頭與空白按下變紅轉白)、目前排名 
+	string name,showrank,str; //宣告名稱、顯示排行榜、str用於生成sf::Text物件與Class Button物件時使用 
+	long long score; //宣告分數 
+	pair<int,long long> now; //用於setrank之pair<int,long long> <目前排名,歷史最高分> 
+	SoundBuffer buffer_hit,buffer_wing,buffer_add,buffer_bgm,buffer_no1; //宣告sf::SoundBuffer物件用於讀取音檔 
+	Sound sound_hit,sound_wing,sound_add,sound_bgm,sound_no1; //宣告sf::Sound物件 音檔的播放器 
+	Font font; //宣告sf::Font物件 讀取字體 
+	Text text_score,text_rank,text_introduce,text_announce,arrow_up,arrow_down,ann_space; //宣告sf::Text 物件 用於文字顯示 
+	Texture bg, bd, pipe,team;//宣告sf::Texture 物件 用於加載圖片紋理(之後用於設定精靈圖片) 
+	Sprite *background, *bird, *pipeBottom, *pipeTop,*team_picture;//宣告 sf::Sprite 指標變數(動態記憶體) 用於圖像、圖像移動、圖像碰撞...
+	vector<Sprite> pipes;//宣告 vector<sf::Sprite> 陣列 用於存放、刪除管道 
+	bool gameover, addscore; //宣告bool 遊戲結束、加分 
+	Status gamestatus = _homepage; //宣告enum Status 用於判斷遊戲當前運行狀態 
+	Textbox *textbox1; //宣告 Class Textbox 指標變數(動態記憶體) 
+	Button *button_play,*button_enter,*button_restart,*button_home,*button_rank,*button_intro; //宣告 Class Button 指標變數(動態記憶體)  
 	void _showRank(){//setrank類別之應用_顯示排行榜(名次、名稱、分數) 
 		showrank="";//顯示之文字 
 		if(v.size()==0)//rank.txt無資料 
 			showrank="No Data";//顯示No Data 
-		for(int i=rankfield;i<v.size();i++){//遍歷vector v	
-			//showrank+="NO."+to_string(i+1)+" "+v[i].first+" Score:"+to_string(v[i].second)+"\n";//顯示格式 
+		for(int i=rankfield;i<v.size();i++){//遍歷vector v
 			showrank+="NO."+to_string(renewrank(v[i]).first)+" "+v[i].first+" Score:"+to_string(v[i].second)+"\n";//顯示格式
 			if(i==rankfield+6)//7人時停下 
 				break;//跳出for迴圈 
@@ -64,12 +63,11 @@ class FlappyBird : protected setrank{
 		sound_hit.play(); //播放撞擊音效
 		gameover = true; //遊戲結束 
 		gamestatus=_gameover; //狀態設定 
-		//history_high=0;//renewrank({name,0}).second;//歷史最高紀錄 
 		now = renewrank({name,score}); //重製分數排行 
 		now_rank=now.first; //目前的排行  
 		text_rank.setString("NO."+to_string(now_rank)+" "+name+" Score:"+to_string(score)+" History:"+to_string(now.second)); //顯示格式 
 		text_rank.setPosition(500-text_rank.getGlobalBounds().width/2.f,187.5f);//設定位置 
-		if(now_rank==1&&score==history_high){//如果目前是第一名且分數是最高紀錄，暫停背景音樂，播放勝利音效 
+		if(now.first==1 && score>=now.second){//如果目前是第一名且分數突破自己最高紀錄，暫停背景音樂，播放勝利音效 
 			sound_bgm.stop();//暫停背景音樂 
 			bgm_timing=1000;//設定背景音樂時間，用於下次循環 
 			sound_no1.play();//播放勝利音樂 
@@ -77,7 +75,6 @@ class FlappyBird : protected setrank{
 	}
 	void setSFML(){ //用於設定初始值
 		//參數設定 
-		space_up=true;
 		name=""; //清空name
 		g = frame = 0.f;; //預設首頁鳥向下、幀(用於設定鳥的圖示與傾角) 
 		interval = 240.f; //設定管道區間 
@@ -85,7 +82,7 @@ class FlappyBird : protected setrank{
 		bgm_timing = 0; //設定背景音樂播放之正記數 
 		gameover = addscore = false;  //結束、加分為否 
 		score = 0;  //分數為0
-		rankfield=0;
+		rankfield=0; //排名顯示 初始為第一名在最上面 
 		//視窗設定 
 		window = new RenderWindow(VideoMode(1000, 600),TEAMNAME); //視窗設定 
 		window->setPosition(Vector2i(0, 0)); //初始化視窗座標左上角(0,0) 
@@ -97,7 +94,7 @@ class FlappyBird : protected setrank{
 		textbox1 = new Textbox(40,Color::White,true);//字體40，白字 
 		/*以下是背景的圖與精靈設定*/
 		if(!bg.loadFromFile(BACKGROUND))//載入圖片
-			cout<<"Fail loading background.png"<<endl;
+			cout<<"Fail loading background.png"<<endl;//報錯 
 		background = new Sprite(); //建立精靈
 		background -> setTexture(bg); //精靈圖案設為背景圖
 		//無須設定位置與大小 初始位置為(0,0) 視窗與圖等大 
@@ -108,12 +105,12 @@ class FlappyBird : protected setrank{
 		bird = new Sprite(); //建立精靈 
 		setPictureSize(bird,&bd,2.5f,3,500,75);
 		/*團隊照片*/
-		if(!team.loadFromFile(TEAM_PICTURE))
-			cout<<"Fail loading team_picture"<<endl;
-		team_picture=new Sprite();
-		team_picture->setTexture(team);
-		team_picture->setScale(0.24,0.24);
-		team_picture->setPosition(500-team_picture->getGlobalBounds().width/2.f,350-team_picture->getGlobalBounds().height/2.f);
+		if(!team.loadFromFile(TEAM_PICTURE))//載入圖片
+			cout<<"Fail loading team_picture"<<endl;//報錯
+		team_picture=new Sprite();//建立精靈
+		team_picture->setTexture(team);//精靈圖案設為團隊照片 
+		team_picture->setScale(0.24,0.24);//設定精靈(圖片)大小 
+		team_picture->setPosition(500-team_picture->getGlobalBounds().width/2.f,350-team_picture->getGlobalBounds().height/2.f);//設定精靈(圖片)位置 
 		/*以下是管道的圖與精靈設定*/
 		if(!pipe.loadFromFile(PIPE))//載入圖片 
 			cout<<"Fail loading pipe.png"<<endl;
@@ -128,20 +125,19 @@ class FlappyBird : protected setrank{
 		if(!font.loadFromFile(FONT))//載入字型 
 			cout<<"Fail loading flappybird.ttf"<<endl; 
 		
-		/*以下是分數的字體與文字設定*/
+		/*以下是字體與文字設定*/ 
 		str=to_string(score);
-		setTextSFML(&text_score,10.f,10.f,50,str);
-		/*以下是字體與文字設定*/
-		str="";
-		setTextSFML(&text_rank,10.f,250.f,50,str);
+		setTextSFML(&text_score,10.f,10.f,50,str);//分數字體與文字 
+		str=""; 
+		setTextSFML(&text_rank,10.f,250.f,50,str);//rank字體與文字 
 		str="This Flappy Bird game is created by B1143007 Lee Min-Chen, B114\n3009 Wu Bing-Rong, B1143015 Lin Xuan-You, B1143021 Lin Cheng-Wei\n, B1143027 ChenBo-Hao, and B1143036 Huang Qi-Ting, is a simple \nbut addictive game. Guide the bird through pipes by tapping the \nscreen or pressing spacebar. Avoid collisions with pipes and \nthe ground. Score points for each successful passage. \nChallenge yourself with increasing difficulty. Aim for the \nhighest score and compete with friends.";
-		setTextSFML(&text_introduce,10.f,10.f,30,str);
+		setTextSFML(&text_introduce,10.f,10.f,30,str);//介紹字體與文字 
 		str="Name : \nWarning : Only supports input of English,\nnumbers and some symbols";
-		setTextSFML(&text_announce,100.f,100.f,40,str);
+		setTextSFML(&text_announce,100.f,100.f,40,str);//提示名稱輸入字體與文字 
 		str="^";
-		setTextSFML(&arrow_up,80.f,350.f,40,str);
-		setTextSFML(&arrow_down,80.f,425.f,40,str);
-		arrow_down.setScale(1.0f, -1.0f);
+		setTextSFML(&arrow_up,80.f,350.f,40,str);//向上箭頭字體與文字 
+		setTextSFML(&arrow_down,80.f,425.f,40,str);//向下箭頭字體與文字 
+		arrow_down.setScale(1.0f, -1.0f);//向下箭頭上下鏡向 
 		str="SPACE";
 		setTextSFML(&ann_space,10.f,550.f,40,str);
 		/*以下是音效設定*/
@@ -249,7 +245,7 @@ class FlappyBird : protected setrank{
 		bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //設定圖示取樣範圍 
 	}	
 	void birdMove(){ //移動鳥
-		if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25&&space_up){ //高度25禁止往上
+		if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25){ //高度25禁止往上
 			any_timing =0;//從0數要轉白的時機 
 			ann_space.setColor(Color::Red);//讓Space轉紅 
 			sound_wing.play(); //播放揮翅膀音效 
@@ -282,7 +278,7 @@ class FlappyBird : protected setrank{
 			gameAnime(); //呼叫函數game，執行精靈移動與鳥的跳躍和動畫 
 			draw(); //呼叫函數draw，刷新畫面，渲染並顯示圖示
 			count++; //常數增加，用於管道生成
-			bgmCircle();
+			bgmCircle(); //bgm循環 
 			if( count == 300 ){ //常數等於300 
 				count = 0; //常數重製
 				 //呼叫音樂重複播放 
@@ -306,7 +302,7 @@ class FlappyBird : protected setrank{
 		else if(bird->getPosition().y<50) //鳥快撞到視窗頂部之前要停下來 
 			g+=0.05f; //逐漸減速，最後下降 
 	}
-	void bgmCircle(){ //音樂重複播放 
+	void bgmCircle(){ //bgm播放 
 		if(bgm_timing>=1320){ //循環時機 
 			bgm_timing=0; //初始化bgm_timing 
 			sound_bgm.play(); //重新播放bgm 
@@ -399,31 +395,31 @@ class FlappyBird : protected setrank{
 					while(window->pollEvent(event)){ //偵測視窗事件  
 						if(event.type == sf::Event::Closed) //視窗被按下關閉(x) 
 			                window->close(); //關閉視窗
-			            if(Keyboard::isKeyPressed(Keyboard::Up)){
-			            	any_timing=0;
-			            	arrow_up.setColor(Color::Red);
-							if(rankfield>0)
-								rankfield--;
+			            if(Keyboard::isKeyPressed(Keyboard::Up)){//修改上箭頭顏色-紅 
+			            	any_timing=0;//設定時間 
+			            	arrow_up.setColor(Color::Red);//上箭頭改成紅 
+							if(rankfield>0)//顯示排名最高是第一名 
+								rankfield--;//顯示排名往上 
 						}
-			            if(Keyboard::isKeyPressed(Keyboard::Down)){
+			            if(Keyboard::isKeyPressed(Keyboard::Down)){//修改下箭頭顏色-紅 
 			            	any_timing=0;
-			            	arrow_down.setColor(Color::Red);
-							if(rankfield<v.size()-1)
-								rankfield++;
+			            	arrow_down.setColor(Color::Red);//下箭頭改成紅 
+							if(rankfield<v.size()-1)//顯示排名最低最後一名
+								rankfield++;//顯示排名往下
 						}
 						if(button_home->button_Mouse(*window)){ //若home按鈕被按下
 							button_Homepage(); //執行Homepage動作
 						}
 					}
 					
-					if(any_timing>=10){
-						arrow_up.setColor(Color::White);
-						arrow_down.setColor(Color::White);
+					if(any_timing>=10){//當經過10次switch箭頭改成白 
+						arrow_up.setColor(Color::White); //修改上箭頭顏色-白 
+						arrow_down.setColor(Color::White);//修改下箭頭顏色-白 
 					}else{
 						any_timing++;
 					}
-					window->draw(arrow_up);
-					window->draw(arrow_down);
+					window->draw(arrow_up);//預渲染向上箭頭 
+					window->draw(arrow_down);//預渲染向下箭頭 
 					window->draw(text_rank); //預渲染排行榜 
 					window->draw(*button_home->sbtn); //預渲染home按鈕 
 					window->display(); //執行渲染 
@@ -436,7 +432,7 @@ class FlappyBird : protected setrank{
 							button_Homepage(); //執行Homepage動作
 						}
 					}
-					window->draw(*team_picture);
+					window->draw(*team_picture); //預渲染小組照片 
 					window->draw(*button_home->sbtn); //預渲染home按鈕 
 					window->draw(text_introduce);  //預渲染介紹 text 
 					window->display(); //執行渲染
