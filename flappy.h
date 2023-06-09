@@ -76,7 +76,7 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 	void setSFML(){ //用於設定初始值
 		//參數設定 
 		name=""; //清空name
-		g = frame = 0.f;; //預設首頁鳥向下、幀(用於設定鳥的圖示與傾角) 
+		g = frame = 0.f; //預設首頁鳥向下、幀(用於設定鳥的圖示與傾角) 
 		interval = 240.f; //設定管道區間 
 		count = 0; //常數-用於生成管道
 		bgm_timing = 0; //設定背景音樂播放之正記數 
@@ -304,7 +304,7 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 	}
 	void bgmCircle(){ //bgm播放 
 		if(bgm_timing>=1320){ //循環時機 
-			bgm_timing=0; //初始化bgm_timing 
+			bgm_timing = 0; //初始化bgm_timing 
 			sound_bgm.play(); //重新播放bgm 
 		}else{
 			bgm_timing++; //記數+1 
@@ -396,13 +396,13 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 						if(event.type == sf::Event::Closed) //視窗被按下關閉(x) 
 			                window->close(); //關閉視窗
 			            if(Keyboard::isKeyPressed(Keyboard::Up)){//修改上箭頭顏色-紅 
-			            	any_timing=0;//設定時間 
+			            	any_timing=0;//設定箭頭轉紅時間 
 			            	arrow_up.setColor(Color::Red);//上箭頭改成紅 
 							if(rankfield>0)//顯示排名最高是第一名 
 								rankfield--;//顯示排名往上 
 						}
 			            if(Keyboard::isKeyPressed(Keyboard::Down)){//修改下箭頭顏色-紅 
-			            	any_timing=0;
+			            	any_timing=0;//設定箭頭轉紅時間
 			            	arrow_down.setColor(Color::Red);//下箭頭改成紅 
 							if(rankfield<v.size()-1)//顯示排名最低最後一名
 								rankfield++;//顯示排名往下
@@ -416,7 +416,7 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 						arrow_up.setColor(Color::White); //修改上箭頭顏色-白 
 						arrow_down.setColor(Color::White);//修改下箭頭顏色-白 
 					}else{
-						any_timing++;
+						any_timing++;//箭頭轉紅計數+1
 					}
 					window->draw(arrow_up);//預渲染向上箭頭 
 					window->draw(arrow_down);//預渲染向下箭頭 
