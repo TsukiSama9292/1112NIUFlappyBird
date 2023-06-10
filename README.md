@@ -16,7 +16,7 @@ C:\SFML-2.4.2\include\SFML\Graphics\Text.hpp 第177行改成
 [SFML TextBox 與 Botton 教學](https://youtu.be/T31MoLJws4U)  
 [C++ 字串轉二進制 教學](https://www.delftstack.com/zh-tw/howto/cpp/convert-string-to-binary-in-cpp/)  
 [C++ 讀取txt文字檔 教學](https://shengyu7697.github.io/cpp-read-text-file/)  
-使用的軟體與網站:  
+使用的網站:  
 [流程圖繪製-draw.io](draw.io)  
 [初期共編網站-replit](https://replit.com/)  
 [後期共編網站-github](https://github.com/)  
