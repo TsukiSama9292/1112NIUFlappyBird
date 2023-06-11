@@ -40,8 +40,8 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 	Sound sound_hit,sound_wing,sound_add,sound_bgm,sound_no1; //宣告sf::Sound物件 音檔的播放器 
 	Font font; //宣告sf::Font物件 讀取字體 
 	Text text_score,text_rank,text_introduce,text_announce,arrow_up,arrow_down,ann_space; //宣告sf::Text 物件 用於文字顯示 
-	Texture bg, bd, pipe,team;//宣告sf::Texture 物件 用於加載圖片紋理(之後用於設定精靈圖片) 
-	Sprite *background, *bird, *pipeBottom, *pipeTop,*team_picture;//宣告 sf::Sprite 指標變數(動態記憶體) 用於圖像、圖像移動、圖像碰撞...
+	Texture bg,bd,pipe,team;//宣告sf::Texture 物件 用於加載圖片紋理(之後用於設定精靈圖片) 
+	Sprite *background,*bird,*pipeBottom,*pipeTop,*team_picture;//宣告 sf::Sprite 指標變數(動態記憶體) 用於圖像、圖像移動、圖像碰撞...
 	vector<Sprite> pipes;//宣告 vector<sf::Sprite> 陣列 用於存放、刪除管道 
 	bool gameover, addscore; //宣告bool 遊戲結束、加分 
 	Status gamestatus = _homepage; //宣告enum Status 用於判斷遊戲當前運行狀態 
@@ -76,7 +76,7 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 	void setSFML(){ //用於設定初始值
 		//參數設定 
 		name=""; //清空name
-		g = frame = 0.f; //預設首頁鳥向下、幀(用於設定鳥的圖示與傾角) 
+		g=frame=0.f; //預設首頁鳥向下、幀(用於設定鳥的圖示與傾角) 
 		interval = 240.f; //設定管道區間 
 		count = 0; //常數-用於生成管道
 		bgm_timing = 0; //設定背景音樂播放之正記數 
@@ -84,25 +84,25 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 		score = 0;  //分數為0
 		rankfield=0; //排名顯示 初始為第一名在最上面 
 		//視窗設定 
-		window = new RenderWindow(VideoMode(1000, 600),TEAMNAME); //視窗設定 
+		window=new RenderWindow(VideoMode(1000, 600),TEAMNAME); //視窗設定 
 		window->setPosition(Vector2i(0, 0)); //初始化視窗座標左上角(0,0) 
 		window->setKeyRepeatEnabled(true); //可以按下按鈕，會重複判斷 
 		//調控遊戲速度 
 		window->setFramerateLimit( 60 ); //限制最大幀數，由於它在內部使用 sf::sleep，其精度取決於底層操作系統，結果也可能有點不精確，
 		//window->setFramerateLimit( 0 ); //無幀數限制，遊戲以最快的速度進行 
 		//textbox之應用 
-		textbox1 = new Textbox(40,Color::White,true);//字體40，白字 
+		textbox1=new Textbox(40,Color::White,true);//字體40，白字 
 		/*以下是背景的圖與精靈設定*/
 		if(!bg.loadFromFile(BACKGROUND))//載入圖片
 			cout<<"Fail loading background.png"<<endl;//報錯 
-		background = new Sprite(); //建立精靈
-		background -> setTexture(bg); //精靈圖案設為背景圖
+		background=new Sprite(); //建立精靈
+		background->setTexture(bg); //精靈圖案設為背景圖
 		//無須設定位置與大小 初始位置為(0,0) 視窗與圖等大 
 		
 		/*以下是鳥的圖與精靈設定*/
 		if(!bd.loadFromFile(BIRD))//載入圖片
 			cout<<"Fail loading bird.png"<<endl;  
-		bird = new Sprite(); //建立精靈 
+		bird=new Sprite(); //建立精靈 
 		setPictureSize(bird,&bd,2.5f,3,500,75);
 		/*團隊照片*/
 		if(!team.loadFromFile(TEAM_PICTURE))//載入圖片
@@ -189,8 +189,8 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 		spt->setPosition(px-spt->getGlobalBounds().width/2.f,py-spt->getGlobalBounds().height/2.f);//設定位置 
 	}
 	void events(){ //用於關閉視窗，重新開始遊戲 
-		while( window->pollEvent(event) ){ //事件發生時執行 
-			if( event.type == Event::Closed){ //事件若為點擊關閉視窗 
+		while(window->pollEvent(event)){ //事件發生時執行 
+			if(event.type==Event::Closed){ //事件若為點擊關閉視窗 
 				window->close(); //視窗物件關閉，即遊戲關閉 
 			}
 		}
@@ -207,10 +207,10 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 		window->display(); //呼叫OpenGL渲染完成後調用(對當前幀的所有待顯示圖像顯示在畫面上) 
 	}
 	void pipeMove(){ //用於移動水管，與鳥的跳躍 
-		if( count % 150 == 0 ){ //每執行150次時 
-			int pos = rand() % 315 + 25; //設定隨機高度 
-			pipeTop->setPosition(1000, pos);  //上管道設定位置
-			pipeBottom->setPosition(1000, pos + interval); //下管道設定位置 
+		if(count%150==0){ //每執行150次時 
+			int pos=rand()%315+25; //設定隨機高度 
+			pipeTop->setPosition(1000,pos);  //上管道設定位置
+			pipeBottom->setPosition(1000,pos+interval); //下管道設定位置 
 			pipes.push_back(*pipeTop); //管道vector新增上管道 
 			pipes.push_back(*pipeBottom); //管道vector新增下管道  
 		}
@@ -229,7 +229,7 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 				pipes.erase(pipes.begin() + i );  //清除管道 
 			} 
 			pipes[i].move(-4.f, 0); //管道向左移動 
-			if(pipes[i].getPosition().x == 408 && !addscore ){ //當管道比鳥更靠左側，且還未加分 
+			if(pipes[i].getPosition().x==408&&!addscore){ //當管道比鳥更靠左側，且還未加分 
 				text_score.setString(to_string(++score)); //顯示分數增加 
 				sound_add.play(); //播放加分音效  
 				addscore = true; //設定已經加過分數了，避免上下管道都加分 
@@ -238,10 +238,10 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 		}}
 	void birdAnime(){ //設定鳥的動畫 
 		frame += 0.15f; // 設定幀 
-		if( frame > 3 ){ // 當大於三
+		if(frame>3){ // 當大於三
 			frame -= 3; // 設為-3，製造循環的感覺 
 		}	
-		bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //設定圖示取樣範圍 
+		bird->setTextureRect(IntRect(34 * (int)frame, 0, 34, 24)); //設定圖示取樣範圍 
 	}	
 	void birdMove(){ //移動鳥
 		if(Keyboard::isKeyPressed(Keyboard::Space)&&bird->getPosition().y>25){ //高度25禁止往上
@@ -249,7 +249,7 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 			ann_space.setColor(Color::Red);//讓Space轉紅 
 			sound_wing.play(); //播放揮翅膀音效 
 			bird->setRotation(-frame*2 - 10.f); //旋轉稍微向上看 
-			g = -8.f; //設定重量向下 
+			g=-8.f; //設定重量向下 
 		}
 		else
 			bird->setRotation(frame*2 - 10.f); //旋轉稍微向下看
@@ -259,7 +259,7 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 			any_timing++;//轉白前的倒數 
 		}
 		bird->move(0, g); //向下墜落 
-		g += 0.5f; //逐漸增快 
+		g+=0.5f; //逐漸增快 
 		if(bird->getPosition().y>650){ //當整個鳥超出畫面(y>650) 
 			_gameOver(); //呼叫遊戲失敗之函數 
 		}
@@ -278,10 +278,8 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 			draw(); //呼叫函數draw，刷新畫面，渲染並顯示圖示
 			count++; //常數增加，用於管道生成
 			bgmCircle(); //bgm循環 
-			if( count == 300 ){ //常數等於300 
-				count = 0; //常數重製
-				 //呼叫音樂重複播放 
-			}
+			if(count == 300) //常數等於300 
+				count = 0; //常數重置
 		}
 	}
 	void reset_Bird(){ //重新設定遊戲中鳥的精靈(圖像) 
@@ -291,9 +289,9 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 		bird->setTextureRect(IntRect(0, 0, 34, 24)); //取用圖片中，最左側的鳥 
 	}
 	void home_BirdAnime(){ //首頁中鳥的動畫 
-		frame += 0.15f; // 設定幀 
-		if( frame > 3 ) // 當大於三
-			frame -= 3; // 設為-3，製造循環的感覺 
+		frame+=0.15f; // 設定幀 
+		if(frame>3) // 當大於三
+			frame-=3; // 設為-3，製造循環的感覺 
 		bird->setTextureRect(IntRect( 34 * (int)frame, 0, 34, 24 )); //設定圖示取樣範圍
 		bird->move(0, g); //向下墜落 
 		if(bird->getPosition().y>90) //鳥快撞到Play按鈕之前要停下來 
