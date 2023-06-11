@@ -339,9 +339,6 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 					while(window->pollEvent(event)){ //偵測視窗事件 
 						if(event.type == Event::Closed) //視窗被按下關閉(x)
 			                window->close(); //關閉視窗
-			            if(event.type == Event::TextEntered){  //文字輸入判定 
-			            	textbox1->typedOn(event); //呼叫textbox執行 
-						}
 						if(button_home->button_Mouse(*window)){ //若home按鈕被按下
 							button_Homepage(); //執行Homepage動作
 						} 
