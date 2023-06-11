@@ -317,8 +317,8 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 				case _homepage: //當在首頁時 
 					while(window->pollEvent(event)){ //偵測視窗事件 
 						if (event.type == sf::Event::Closed) //視窗被按下關閉(x) 
-			                window->close(); //關閉視窗
-			            if(button_play->button_Mouse(*window)){//若play按鈕被按下 
+			                		window->close(); //關閉視窗
+			            		if(button_play->button_Mouse(*window)){//若play按鈕被按下 
 							button_Play(); //執行Play動作 
 						}
 						if(button_rank->button_Mouse(*window)){//若rank按鈕被按下
@@ -338,7 +338,7 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 				case _inputname:
 					while(window->pollEvent(event)){ //偵測視窗事件 
 						if(event.type == Event::Closed) //視窗被按下關閉(x)
-			                window->close(); //關閉視窗
+			               			 window->close(); //關閉視窗
 						if(button_home->button_Mouse(*window)){ //若home按鈕被按下
 							button_Homepage(); //執行Homepage動作
 						} 
@@ -366,8 +366,8 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 				case _gameover:
 					while(window->pollEvent(event)){ //偵測視窗事件  
 						if(event.type == sf::Event::Closed) //視窗被按下關閉(x)
-			                window->close(); //關閉視窗
-			            if(button_restart->button_Mouse(*window)){ //若restart按鈕被按下
+			                		window->close(); //關閉視窗
+			            		if(button_restart->button_Mouse(*window)){ //若restart按鈕被按下
 							button_Restart(); //執行Restart動作
 						}
 						if(button_home->button_Mouse(*window)){ //若home按鈕被按下
@@ -389,18 +389,18 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 					while(window->pollEvent(event)){ //偵測視窗事件  
 						if(event.type == sf::Event::Closed) //視窗被按下關閉(x) 
 			                window->close(); //關閉視窗
-			            if(Keyboard::isKeyPressed(Keyboard::Up)){//修改上箭頭顏色-紅 
-			            	any_timing=0;//設定箭頭轉紅時間 
-			            	arrow_up.setColor(Color::Red);//上箭頭改成紅 
-							if(rankfield>0)//顯示排名最高是第一名 
-								rankfield--;//顯示排名往上 
+						if(Keyboard::isKeyPressed(Keyboard::Up)){//修改上箭頭顏色-紅 
+							any_timing=0;//設定箭頭轉紅時間 
+							arrow_up.setColor(Color::Red);//上箭頭改成紅 
+								if(rankfield>0)//顯示排名最高是第一名 
+									rankfield--;//顯示排名往上 
 						}
-			            if(Keyboard::isKeyPressed(Keyboard::Down)){//修改下箭頭顏色-紅 
-			            	any_timing=0;//設定箭頭轉紅時間
-			            	arrow_down.setColor(Color::Red);//下箭頭改成紅 
+						if(Keyboard::isKeyPressed(Keyboard::Down)){//修改下箭頭顏色-紅 
+							any_timing=0;//設定箭頭轉紅時間
+							arrow_down.setColor(Color::Red);//下箭頭改成紅 
 							if(rankfield<v.size()-1)//顯示排名最低最後一名
 								rankfield++;//顯示排名往下
-						}
+							}
 						if(button_home->button_Mouse(*window)){ //若home按鈕被按下
 							button_Homepage(); //執行Homepage動作
 						}
@@ -409,9 +409,8 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 					if(any_timing>=10){//當經過10次switch箭頭改成白 
 						arrow_up.setColor(Color::White); //修改上箭頭顏色-白 
 						arrow_down.setColor(Color::White);//修改下箭頭顏色-白 
-					}else{
+					}else
 						any_timing++;//箭頭轉紅計數+1
-					}
 					window->draw(arrow_up);//預渲染向上箭頭 
 					window->draw(arrow_down);//預渲染向下箭頭 
 					window->draw(text_rank); //預渲染排行榜 
@@ -421,10 +420,9 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 				case _introduce:
 					while(window->pollEvent(event)){ //偵測視窗事件
 						if(event.type == sf::Event::Closed) //視窗被按下關閉(x) 
-			                window->close();//關閉視窗
-						if(button_home->button_Mouse(*window)){ //若home按鈕被按下
+			                		window->close();//關閉視窗
+						if(button_home->button_Mouse(*window)) //若home按鈕被按下
 							button_Homepage(); //執行Homepage動作
-						}
 					}
 					window->draw(*team_picture); //預渲染小組照片 
 					window->draw(*button_home->sbtn); //預渲染home按鈕 
