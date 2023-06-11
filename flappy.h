@@ -189,9 +189,8 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 		spt->setPosition(px-spt->getGlobalBounds().width/2.f,py-spt->getGlobalBounds().height/2.f);//設定位置 
 	}
 	void events(){ //用於關閉視窗，重新開始遊戲 
-		auto e = new Event(); //視窗事件物件設定 
-		while( window->pollEvent( *e ) ){ //事件發生時執行 
-			if( e->type == Event::Closed){ //事件若為點擊關閉視窗 
+		while( window->pollEvent(event) ){ //事件發生時執行 
+			if( event.type == Event::Closed){ //事件若為點擊關閉視窗 
 				window->close(); //視窗物件關閉，即遊戲關閉 
 			}
 		}
