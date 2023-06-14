@@ -27,4 +27,4 @@ C:\SFML-2.4.2\include\SFML\Graphics\Text.hpp 第177行改成
 [撞擊](https://www.youtube.com/watch?v=g-lcamn3VRE)  
 [達到最高紀錄](https://www.youtube.com/watch?v=K0ZNtpTYKpI)  
 功能介紹:  
-[Youtube連結]:(https://www.youtube.com/watch?v=r1RAsKY5vTs)  
+[Youtube連結](https://www.youtube.com/watch?v=r1RAsKY5vTs)  
