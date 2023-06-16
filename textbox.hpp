@@ -7,7 +7,7 @@
 #define ESCAPE_KEY 27 
  class Textbox{
  	public:
- 		Textbox(){std::cout<<"Error Textbox obj";}
+ 		Textbox(){std::cout<<"Error Textbox obj"<<endl;}
  		Textbox(int size, sf::Color color, bool sel){
  			textbox.setCharacterSize(size);
  			textbox.setOutlineThickness(3);
