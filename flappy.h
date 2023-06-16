@@ -337,7 +337,10 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 				case _inputname:
 					while(window->pollEvent(event)){ //偵測視窗事件 
 						if(event.type == Event::Closed) //視窗被按下關閉(x)
-			               	window->close(); //關閉視窗
+			               			window->close(); //關閉視窗
+						if(event.type == Event::TextEntered){  //當鍵盤被按下
+			            			textbox1->typedOn(event); //執行textbox輸入 
+						}
 						if(button_home->button_Mouse(*window)){ //若home按鈕被按下
 							button_Homepage(); //執行Homepage動作
 						} 
@@ -464,6 +467,6 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 	}
 	public:
 	FlappyBird(){ //建構元(子)，設定初始值 
-	  setSFML(); //由於SFML套件的物件設定不可在建構子執行，所以另外呼叫函數 
+		setSFML(); //由於SFML套件的物件設定不可在建構子執行，所以另外呼叫函數 
 	}
 };
