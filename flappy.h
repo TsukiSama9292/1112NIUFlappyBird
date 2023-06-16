@@ -467,6 +467,6 @@ class FlappyBird : private setrank{ //FlappyBird繼承setrank
 	}
 	public:
 	FlappyBird(){ //建構元(子)，設定初始值 
-		setSFML(); //由於SFML套件的物件設定不可在建構子執行，所以另外呼叫函數 
+		setSFML(); //由於SFML套件的視窗物件設定不可在建構子執行，所以另外呼叫函數 
 	}
 };
