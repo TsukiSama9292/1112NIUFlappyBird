@@ -3,9 +3,8 @@
 ```
 開發工具為Dev C++ GCC 4.9.2  
 所以要用SFML 2.4.2的GCC版本  
-SFML套件安裝與使用可以參考SFML Dev C++ 教學網站  
-文法有用到C++11  
-請在Dev C++的編譯器選項(一般) 呼叫編譯器執行(打勾) 並打上-std=c++11  
+SFML套件安裝與使用可以參考 下方的SFML Dev C++教學參考資料  
+文法有用到C++11 請在Dev C++的編譯器選項(一般) 呼叫編譯器執行(打勾) 並打上-std=c++11  
 C:\SFML-2.4.2\include\SFML\Graphics\Text.hpp 第177行改成  
 /\*SFML_DEPRECATED\*/ void setColor(const Color& color);  
 這樣可以讓設定Text文字顏色時Dev C++不會有警告  
