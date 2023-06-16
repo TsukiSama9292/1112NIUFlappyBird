@@ -31,7 +31,7 @@ C:\SFML-2.4.2\include\SFML\Graphics\Text.hpp 第177行改成
 [得分音樂](https://www.youtube.com/watch?v=qfx6yf8pux4)  
 [撞擊音樂](https://www.youtube.com/watch?v=g-lcamn3VRE)  
 [達到最高紀錄音樂](https://www.youtube.com/watch?v=K0ZNtpTYKpI)  
-[鳥 地圖 字體](https://github.com/terroo/flappybird/tree/main/resources)
+[鳥、地圖、管道圖檔 與 字體](https://github.com/terroo/flappybird/tree/main/resources)
 
 ## 功能介紹
 [Youtube連結](https://www.youtube.com/watch?v=r1RAsKY5vTs)
