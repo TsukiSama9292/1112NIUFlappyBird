@@ -1,9 +1,10 @@
-# 111_2-NO.5-TEAM-Flappy-bird
 #宜蘭大學 資工一 111_2 程式設計 期末專案 第五組 FlappyBird  
+#執行前的前置作業
 ```
 開發工具為Dev C++ GCC 4.9.2  
 所以要用SFML 2.4.2的GCC版本  
-文法有用到C++11  
+SFML安裝可參考的Dev C++教學網站  
+而文法有用到C++11  
 請在Dev C++的編譯器選項(一般) 呼叫編譯器執行(打勾) 並打上-std=c++11  
 C:\SFML-2.4.2\include\SFML\Graphics\Text.hpp 第177行改成  
 /\*SFML_DEPRECATED\*/ void setColor(const Color& color);  
