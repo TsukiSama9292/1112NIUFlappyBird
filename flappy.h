@@ -29,7 +29,6 @@ enum Status{_homepage, _inputname, _game, _gameover, _showrank, _introduce};//�
 class FlappyBird : private setrank{ //FlappyBird繼承setrank
 	private:
 	Event event;//宣告sf::事件 event 
-	float mouse_x,mouse_y,btn_x,btn_y,btn_w,btn_h;//宣告滑鼠x,y位置	按鈕x,y位置 按鈕寬,高 
 	RenderWindow *window; //宣告sf::RenderWindow 指標變數 (動態記憶體) 
 	float g,frame,interval; //宣告重力、幀(用於動畫)、間隔(管道的間隔) 
 	int count,bgm_timing,rankfield,any_timing,now_rank;//常數(水管生成時機)、BGM時機(循環播放)、排行範圍(顯示的範圍)、其他時機(用於箭頭與空白按下變紅轉白)、目前排名 
