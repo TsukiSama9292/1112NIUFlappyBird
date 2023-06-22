@@ -22,7 +22,6 @@ C:\SFML-2.4.2\include\SFML\Graphics\Text.hpp 第177行改成
 ## 使用的網站
 [流程圖繪製-draw.io](draw.io)  
 [初期共編網站-replit](https://replit.com/)  
-[後期共編網站-github](https://github.com/)  
 [後期共編網站-github](https://github.com/)
 
 ## 音效與圖檔來源
